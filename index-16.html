@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#121212">
+<title>राज ढाबा – QR ऑर्डर</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#121212;--gold:#C6A15B;--ivory:#FAF7F0;--charcoal:#252525;--gray:#77736B;
+  --green:#26734D;--warn:#B7791F;--err:#B42318;--line:#E7E2D8;--card:#FFFFFF;
+  --dcard:#1E1E1E;--dline:#2F2F2F;--dtext:#F5F5F5;
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:Inter,'Noto Sans Devanagari',system-ui,sans-serif;font-size:16px;line-height:1.5;background:var(--ivory);color:var(--charcoal);-webkit-text-size-adjust:100%}
+body.staff{background:var(--black);color:var(--dtext)}
+button,input,select,textarea{font-family:inherit;font-size:16px;color:inherit}
+button{cursor:pointer}
+h1,h2,h3{font-family:'Playfair Display','Noto Sans Devanagari',serif;font-weight:700;line-height:1.25}
+small{font-size:14px}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px}
+
+/* ---------- buttons (design standard) ---------- */
+.btn{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:52px;padding:10px 18px;border-radius:var(--r);border:1.5px solid transparent;font-weight:600;font-size:18px;line-height:1.25;text-align:center;transition:transform .08s}
+.btn:active{transform:scale(.98)}
+.btn small{font-weight:500;opacity:.8;font-size:14px}
+.btn-primary{background:var(--gold);color:var(--black)}
+.btn-secondary{background:#fff;color:var(--charcoal);border-color:var(--gold)}
+.btn-success{background:var(--green);color:#fff}
+.btn-warning{background:var(--warn);color:#fff}
+.btn-error{background:var(--err);color:#fff}
+.btn-lg{min-height:62px;font-size:19px}
+.btn-md{min-height:50px}
+.btn[disabled],.btn.disabled{background:var(--line);color:var(--gray);border-color:transparent;cursor:not-allowed}
+.btn-ghost-dark{background:transparent;color:var(--dtext);border-color:#444}
+.btn-inline{width:auto;display:inline-flex}
+
+/* ---------- customer header ---------- */
+.top{background:var(--black);color:#fff;border-bottom:2px solid var(--gold)}
+.top .wrap{padding-top:14px;padding-bottom:14px;display:flex;align-items:center;gap:10px}
+.top h1{font-size:22px;color:#fff;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{width:44px;height:44px;border-radius:12px;border:1px solid #444;background:transparent;color:#fff;font-size:22px;flex:0 0 auto}
+.tpill{border:1px solid var(--gold);color:var(--gold);border-radius:999px;padding:6px 12px;font-weight:600;font-size:14px;white-space:nowrap}
+.lang{display:flex;border:1px solid #444;border-radius:999px;overflow:hidden;flex:0 0 auto}
+.lang button{background:transparent;border:0;color:#cfcfcf;padding:8px 12px;font-size:14px;min-height:36px}
+.lang button.on{background:var(--gold);color:var(--black);font-weight:700}
+.hero{background:radial-gradient(120% 90% at 50% 0%,#2a2418 0%,var(--black) 60%);color:#fff;text-align:center;padding:30px 20px 34px;border-bottom:2px solid var(--gold)}
+.logo{width:72px;height:72px;margin:0 auto 14px;border-radius:50%;border:2px solid var(--gold);display:grid;place-items:center;font-family:'Playfair Display','Noto Sans Devanagari',serif;font-weight:700;font-size:32px;color:var(--gold);background:#161616}
+.hero h1{font-size:36px;color:#fff;letter-spacing:.5px}
+.hero .tag{color:var(--gold);font-size:16px;margin-top:2px;letter-spacing:1px}
+.divider{width:64px;height:2px;background:var(--gold);margin:16px auto}
+.hero .tpill{display:inline-block;font-size:18px;padding:8px 18px}
+.hero .row{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-top:6px}
+.home-actions{padding:28px 20px;display:flex;flex-direction:column;gap:14px;max-width:720px;margin:0 auto}
+.foot{text-align:center;color:var(--gray);font-size:14px;padding:12px 20px 40px}
+.foot a{color:var(--charcoal);font-weight:600;text-decoration:none}
+.steps3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:8px 0 0}
+.steps3 div{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px 8px;text-align:center;font-size:14px;color:var(--gray)}
+.steps3 b{display:block;color:var(--charcoal);font-size:16px}
+
+/* ---------- menu ---------- */
+.catnav{position:sticky;top:0;z-index:20;background:var(--ivory);border-bottom:1px solid var(--line)}
+.catnav .scroll{display:flex;gap:8px;overflow-x:auto;padding:12px 20px;scrollbar-width:none;max-width:720px;margin:0 auto}
+.catnav .scroll::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 16px;font-size:15px;min-height:42px;color:var(--charcoal)}
+.chip.on{background:var(--black);color:var(--gold);border-color:var(--black);font-weight:600}
+.vegtoggle{display:flex;align-items:center;gap:10px;padding:14px 0 0;font-size:15px;color:var(--charcoal)}
+.sw{width:50px;height:30px;border-radius:999px;background:var(--line);position:relative;border:0;flex:0 0 auto}
+.sw::after{content:'';position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sw.on{background:var(--green)}
+.sw.on::after{left:23px}
+.sec{padding-top:28px;scroll-margin-top:70px}
+.sec h2{font-size:24px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.sec h2::after{content:'';flex:1;height:1px;background:var(--gold);opacity:.6}
+.food{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.food.off{opacity:.55}
+.food-top{display:flex;gap:14px}
+.thumb{flex:0 0 88px;width:88px;height:88px;border-radius:12px;background:linear-gradient(135deg,#1b1b1b,#2e2818);border:1px solid var(--gold);display:grid;place-items:center;font-size:38px;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.nm{font-size:18px;font-weight:600;line-height:1.35;display:flex;gap:8px;align-items:flex-start}
+.nm .vd{margin-top:5px}
+.ds{font-size:14px;color:var(--gray);margin-top:4px}
+.vd{width:16px;height:16px;border:2px solid currentColor;border-radius:3px;display:inline-grid;place-items:center;flex:0 0 auto}
+.vd::after{content:'';width:7px;height:7px;border-radius:50%;background:currentColor}
+.vd.v{color:var(--green)}.vd.e{color:var(--warn)}.vd.n{color:var(--err)}
+.seg{display:flex;gap:8px;margin-top:14px}
+.seg button{flex:1;min-height:50px;border:1px solid var(--line);background:#fff;border-radius:12px;color:var(--charcoal);font-size:16px;line-height:1.25}
+.seg button b{display:block;font-size:17px}
+.seg button.on{border:2px solid var(--gold);background:#FBF5E8}
+.single{margin-top:14px;font-size:17px;display:flex;align-items:baseline;gap:8px}
+.single b{font-size:18px}
+.single small{color:var(--gray)}
+.food-act{display:flex;gap:12px;margin-top:14px;align-items:center}
+.step{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;flex:0 0 auto}
+.step button{width:46px;height:48px;border:0;background:#fff;font-size:24px;line-height:1}
+.step span{min-width:36px;text-align:center;font-weight:700;font-size:18px}
+.food-act .btn{flex:1;min-height:48px;font-size:17px}
+.incart{margin-top:10px;font-size:14px;color:var(--green);font-weight:600}
+.offtag{margin-top:12px;font-size:14px;color:var(--gray);font-weight:600}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(18,18,18,.97),rgba(18,18,18,.9));border-top:1px solid var(--gold)}
+.bar .btn{max-width:688px;margin:0 auto;min-height:58px;flex-direction:row;justify-content:space-between;font-size:18px}
+.spacer{height:110px}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--black);color:#fff;border:1px solid var(--gold);padding:10px 18px;border-radius:999px;font-size:15px;z-index:60;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+
+/* ---------- cart / bill ---------- */
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-top:16px}
+.line{display:flex;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.line:last-child{border-bottom:0}
+.line .li{flex:1;min-width:0}
+.line .li b{font-size:17px;display:block;line-height:1.3}
+.line .li small{color:var(--gray)}
+.line .lt{font-weight:700;font-size:17px;min-width:64px;text-align:right}
+.trow{display:flex;justify-content:space-between;padding:6px 0;font-size:16px}
+.trow.big{font-size:22px;font-weight:700;border-top:1px dashed var(--gold);margin-top:8px;padding-top:14px}
+textarea.note{width:100%;min-height:84px;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;resize:vertical}
+label.lb{display:block;font-weight:600;margin:16px 0 8px}
+.empty{text-align:center;padding:48px 20px;color:var(--gray)}
+.empty .big{font-size:48px}
+
+/* ---------- success / tracking ---------- */
+.okwrap{text-align:center;padding:36px 20px 20px}
+.tick{width:84px;height:84px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:44px;margin:0 auto 18px}
+.okwrap h1{font-size:26px;color:var(--charcoal)}
+.okwrap p{color:var(--gray);margin-top:8px}
+.ocard{background:#fff;border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:var(--r);padding:20px;margin:22px auto 0;text-align:center}
+.ocard .lab{font-size:13px;letter-spacing:1.5px;color:var(--gray);font-weight:600}
+.ocard .num{font-size:30px;font-weight:700;font-family:'Playfair Display',serif;margin:2px 0 10px}
+.ocard .tb{font-size:20px;font-weight:600}
+.badge{display:inline-block;padding:6px 14px;border-radius:999px;font-weight:600;font-size:14px;background:#EFE7D3;color:var(--charcoal);margin-top:12px}
+.badge.READY,.badge.SERVED{background:var(--green);color:#fff}
+.badge.PREPARING{background:var(--warn);color:#fff}
+.badge.NEW{background:var(--gold);color:var(--black)}
+.badge.ACCEPTED{background:#DAD4C4}
+.stack{display:flex;flex-direction:column;gap:12px;margin-top:22px}
+.timeline{margin-top:8px}
+.tl{display:flex;gap:16px;position:relative;padding-bottom:22px}
+.tl:last-child{padding-bottom:0}
+.tl::before{content:'';position:absolute;left:19px;top:40px;bottom:0;width:2px;background:var(--line)}
+.tl:last-child::before{display:none}
+.tl.done::before{background:var(--green)}
+.dot{flex:0 0 40px;height:40px;border-radius:50%;border:2px solid var(--line);background:#fff;display:grid;place-items:center;font-weight:700;color:var(--gray)}
+.tl.done .dot{background:var(--green);border-color:var(--green);color:#fff}
+.tl.cur .dot{border-color:var(--gold);background:var(--black);color:var(--gold);box-shadow:0 0 0 5px rgba(198,161,91,.25)}
+.tl.cur.ready .dot{background:var(--green);border-color:var(--green);color:#fff;box-shadow:0 0 0 5px rgba(38,115,77,.2)}
+.tl .tx b{font-size:18px;display:block;line-height:1.3;padding-top:7px}
+.tl .tx small{color:var(--gray)}
+.tl.pend .tx b{color:var(--gray);font-weight:500}
+.ord{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-top:12px}
+.ord .oh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ord .oh b{font-size:20px;font-family:'Playfair Display',serif}
+.ord .sm{color:var(--gray);font-size:14px;margin-top:6px}
+.ord .ft{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:18px;font-weight:700}
+.ord .btn{margin-top:12px;min-height:48px;font-size:16px}
+.ord ul{list-style:none;margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.ord li{display:flex;justify-content:space-between;font-size:15px;padding:3px 0}
+.notice{background:#FBF5E8;border:1px solid var(--gold);border-radius:12px;padding:12px 14px;font-size:14px;margin-top:16px;color:var(--charcoal)}
+.notice.priv{background:#fff}
+
+/* ---------- staff ---------- */
+.gate{max-width:380px;margin:12vh auto 0;padding:24px;background:var(--dcard);border:1px solid var(--dline);border-top:3px solid var(--gold);border-radius:var(--r);text-align:center}
+.gate h1{color:var(--gold);font-size:26px;margin-bottom:6px}
+.gate p{color:#aaa;font-size:14px;margin-bottom:16px}
+.gate input{width:100%;height:54px;text-align:center;font-size:22px;letter-spacing:6px;background:#121212;border:1px solid #444;border-radius:12px;margin-bottom:14px}
+.errtxt{color:#ff8a80;font-size:14px;margin-bottom:10px}
+.shead{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--gold);background:var(--black);position:sticky;top:0;z-index:25;flex-wrap:wrap}
+.shead h1{font-size:20px;color:var(--gold);flex:1;min-width:140px}
+.shead .lang button{color:#ccc}
+.smallbtn{border:1px solid #444;background:transparent;color:var(--dtext);border-radius:10px;padding:8px 12px;min-height:40px;font-size:14px}
+.smallbtn.on{border-color:var(--gold);color:var(--gold)}
+.demo{background:#2a2418;border-bottom:1px solid var(--gold);color:#e8d9b6;font-size:13px;padding:8px 16px;text-align:center}
+.kwrap{padding:16px;max-width:960px;margin:0 auto}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;border:1px solid #444;background:transparent;color:var(--dtext);border-radius:999px;padding:9px 16px;min-height:44px;font-size:15px}
+.tab.on{background:var(--gold);color:var(--black);border-color:var(--gold);font-weight:700}
+.tab i{font-style:normal;margin-left:6px;opacity:.9}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;margin-top:14px}
+.kc{background:var(--dcard);border:1px solid var(--dline);border-left:5px solid var(--gold);border-radius:var(--r);padding:16px}
+.kc.ACCEPTED{border-left-color:#8a8a8a}.kc.PREPARING{border-left-color:var(--warn)}.kc.READY{border-left-color:var(--green)}.kc.SERVED{border-left-color:#444;opacity:.8}
+.kc .kh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.kc .kn{font-size:24px;font-weight:700;font-family:'Playfair Display',serif;color:var(--gold)}
+.kc .kt{font-size:22px;font-weight:700}
+.kc .km{color:#aaa;font-size:14px;margin:4px 0 10px}
+.kc ul{list-style:none;border-top:1px dashed #444;padding-top:8px;margin-bottom:12px}
+.kc li{display:flex;gap:10px;padding:4px 0;font-size:17px}
+.kc li b{color:var(--gold);min-width:34px}
+.kc .kn2{background:#121212;border:1px solid #444;border-radius:10px;padding:8px 10px;font-size:14px;color:#ddd;margin-bottom:12px}
+.kc .btn{min-height:52px;font-size:17px}
+.alertbar{position:fixed;top:0;left:0;right:0;z-index:80;background:var(--gold);color:var(--black);padding:16px;text-align:center;font-weight:700;font-size:18px;animation:flash 1s ease-in-out 6;box-shadow:0 6px 24px rgba(0,0,0,.5)}
+@keyframes flash{50%{background:#e6c98a}}
+.adm{display:block}
+.side{background:#0c0c0c;border-bottom:1px solid var(--gold);padding:10px 12px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.side::-webkit-scrollbar{display:none}
+.side .brandt{display:none}
+.side a{flex:0 0 auto;color:#d6d6d6;text-decoration:none;padding:10px 14px;border-radius:10px;font-size:15px;border:1px solid transparent;white-space:nowrap}
+.side a.on{background:#1E1E1E;color:var(--gold);border-color:var(--gold);font-weight:600}
+.amain{padding:16px;max-width:1100px;margin:0 auto}
+.amain h2{font-size:24px;margin-bottom:14px;color:#fff}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.stat{background:var(--dcard);border:1px solid var(--dline);border-radius:var(--r);padding:16px}
+.stat small{color:#aaa;display:block}
+.stat b{font-size:28px;color:var(--gold);font-family:'Playfair Display',serif}
+.dcard{background:var(--dcard);border:1px solid var(--dline);border-radius:var(--r);padding:16px;margin-top:14px}
+.dcard h3{font-size:18px;margin-bottom:10px;color:#fff}
+table.t{width:100%;border-collapse:collapse;font-size:15px}
+table.t th{text-align:left;color:#aaa;font-weight:500;padding:8px 6px;border-bottom:1px solid #333;font-size:14px}
+table.t td{padding:10px 6px;border-bottom:1px solid #2a2a2a;vertical-align:middle}
+.tscroll{overflow-x:auto}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:13px;font-weight:600;background:#333;color:#fff}
+.pill.NEW{background:var(--gold);color:#121212}.pill.PREPARING{background:var(--warn)}.pill.READY,.pill.SERVED,.pill.paid{background:var(--green)}.pill.unpaid{background:#444}
+.mrow{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #2a2a2a;flex-wrap:wrap}
+.mrow .mn{flex:1;min-width:150px}
+.mrow .mn b{display:block;font-size:16px}.mrow .mn small{color:#aaa}
+.mrow label{font-size:13px;color:#aaa;display:flex;flex-direction:column;gap:2px}
+.mrow input[type=number]{width:84px;height:42px;background:#121212;border:1px solid #444;border-radius:10px;padding:0 10px;color:#fff}
+.mrow .sw{background:#444}.mrow .sw.on{background:var(--green)}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.tcard{background:#fff;color:#121212;border-radius:var(--r);padding:16px;text-align:center}
+.tcard h3{font-size:20px;margin-bottom:2px}
+.tcard small{color:#555;display:block;margin-bottom:10px}
+.qr{display:grid;place-items:center;min-height:150px}
+.tcard .lk{font-size:11px;color:#777;word-break:break-all;margin-top:8px}
+.row2{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.row2 .btn{width:auto;flex:1;min-width:150px;min-height:48px;font-size:16px}
+@media(min-width:900px){
+  .adm{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 62px)}
+  .side{flex-direction:column;border-bottom:0;border-right:1px solid var(--dline);padding:16px 12px;overflow:visible}
+  .side .brandt{display:block;color:var(--gold);font-family:'Playfair Display','Noto Sans Devanagari',serif;font-size:20px;padding:6px 10px 14px}
+  .stats{grid-template-columns:repeat(4,1fr)}
+  .foodgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .foodgrid .food{margin-bottom:0}
+}
+@media print{
+  body,body.staff{background:#fff!important}
+  .shead,.side,.demo,.noprint,.toast{display:none!important}
+  .adm{display:block}.amain{padding:0}.amain h2{color:#000}
+  .tcard{border:1px solid #999;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="alert"></div>
+<div id="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* =====================================================================
+   राज ढाबा – Smart Table QR Ordering  (Design reference build)
+   - सारा सेटिंग/नाम/दाम नीचे CFG और MENU में है।
+   - अभी डेटा इसी फोन/ब्राउज़र में (localStorage) रखा जाता है, ताकि डिज़ाइन
+     और पूरा फ्लो आज़माया जा सके। असली ऑर्डर सिस्टम (Supabase) में जोड़ते समय
+     सिर्फ "STORE" वाला हिस्सा बदलना है – बाकी डिज़ाइन वैसा ही रहेगा।
+   ===================================================================== */
+const CFG={
+  tables:10,
+  taxPercent:0,          // GST लगानी हो तो यहाँ % लिखें (जैसे 5). 0 = बिल में टैक्स की लाइन नहीं दिखेगी
+  phone:'9559502506',
+  owner:{hi:'प्रो. बबलू यादव',en:'Prop. Bablu Yadav'},
+  staffPin:'1234',       // डेमो PIN – असली सिस्टम में Supabase लॉगिन से बदलें
+  firstOrderNo:1025,
+  prefix:'ST-'
+};
+const CATS=[
+ {id:'paneer',hi:'पनीर',en:'Paneer',ic:'🧀'},
+ {id:'dal',hi:'दाल',en:'Dal',ic:'🥣'},
+ {id:'sabzi',hi:'सब्ज़ी',en:'Vegetables',ic:'🍛'},
+ {id:'egg',hi:'अण्डा',en:'Egg',ic:'🥚'},
+ {id:'nonveg',hi:'चिकन और मटन',en:'Chicken & Mutton',ic:'🍗'},
+ {id:'rice',hi:'चावल',en:'Rice',ic:'🍚'},
+ {id:'bread',hi:'रोटी',en:'Breads',ic:'🫓'},
+ {id:'tea',hi:'चाय',en:'Chai',ic:'☕'}
+];
+/* v=शाकाहारी, e=अण्डा, n=माँसाहारी | h=हाफ दाम, f=फुल दाम, p=एक ही दाम | img="फोटो का लिंक" डालने पर कार्ड में असली फोटो दिखेगी */
+const MENU=[
+ {id:'i01',cat:'egg',v:'e',hi:'अण्डा',en:'Egg Curry',h:70,f:140,dh:'ढाबा स्टाइल अण्डा करी।',de:'Dhaba-style egg curry.'},
+ {id:'i02',cat:'egg',v:'e',hi:'अण्डा मसाला',en:'Egg Masala',h:80,f:150,dh:'तेज़ मसालों की ग्रेवी में अण्डा।',de:'Eggs in a spiced masala gravy.'},
+ {id:'i03',cat:'egg',v:'e',hi:'अण्डा कीमा',en:'Egg Keema',h:80,f:150,dh:'कीमा स्टाइल में बना मसालेदार अण्डा।',de:'Spiced eggs cooked keema style.'},
+ {id:'i04',cat:'egg',v:'e',hi:'अण्डा भुर्जी',en:'Egg Bhurji',h:50,f:100,dh:'प्याज़-टमाटर के साथ भुनी भुर्जी।',de:'Scrambled eggs with onion and tomato.'},
+ {id:'i05',cat:'paneer',v:'v',hi:'मटर पनीर',en:'Matar Paneer',h:100,f:200,dh:'मटर और पनीर की स्वादिष्ट सब्ज़ी।',de:'Paneer and green peas in gravy.'},
+ {id:'i06',cat:'paneer',v:'v',hi:'कड़ाही पनीर',en:'Kadhai Paneer',h:140,f:280,dh:'कड़ाही स्टाइल में भुना पनीर।',de:'Paneer cooked kadhai style.'},
+ {id:'i07',cat:'paneer',v:'v',hi:'शाही पनीर',en:'Shahi Paneer',h:120,f:240,dh:'मलाईदार शाही ग्रेवी में पनीर।',de:'Paneer in a rich, creamy gravy.'},
+ {id:'i08',cat:'paneer',v:'v',hi:'चिली पनीर',en:'Chilli Paneer',h:120,f:240,dh:'तीखा और चटपटा चिली पनीर।',de:'Spicy, tangy chilli paneer.'},
+ {id:'i09',cat:'paneer',v:'v',hi:'पनीर मसाला',en:'Paneer Masala',h:140,f:280,dh:'मसालेदार ग्रेवी में पनीर।',de:'Paneer in a spiced masala gravy.'},
+ {id:'i10',cat:'paneer',v:'v',hi:'पनीर बटर मसाला',en:'Paneer Butter Masala',h:150,f:290,dh:'मक्खन वाली मलाईदार ग्रेवी में पनीर।',de:'Paneer in a buttery, creamy gravy.'},
+ {id:'i11',cat:'paneer',v:'v',hi:'पालक पनीर',en:'Palak Paneer',h:100,f:190,dh:'पालक की हरी ग्रेवी में पनीर।',de:'Paneer in a spinach gravy.'},
+ {id:'i12',cat:'nonveg',v:'n',hi:'चिकन',en:'Chicken',h:140,f:270,dh:'ढाबा स्टाइल मसालेदार चिकन करी।',de:'Dhaba-style spicy chicken curry.'},
+ {id:'i13',cat:'nonveg',v:'n',hi:'चिकन लेग',en:'Chicken Leg',h:150,f:290,dh:'मसालेदार ग्रेवी में चिकन लेग।',de:'Chicken leg in a spicy gravy.'},
+ {id:'i14',cat:'nonveg',v:'n',hi:'मटन करी',en:'Mutton Curry',h:170,f:320,dh:'धीमी आँच पर पका मटन।',de:'Mutton slow-cooked in gravy.'},
+ {id:'i15',cat:'dal',v:'v',hi:'दाल फ्राई',en:'Dal Fry',h:60,f:120,dh:'सादी, घर जैसी फ्राई दाल।',de:'Simple, home-style dal fry.'},
+ {id:'i16',cat:'dal',v:'v',hi:'दाल तड़का',en:'Dal Tadka',h:70,f:130,dh:'लहसुन-जीरे के तड़के वाली दाल।',de:'Dal with a garlic-cumin tadka.'},
+ {id:'i17',cat:'dal',v:'v',hi:'दाल मखनी',en:'Dal Makhani',h:80,f:160,dh:'धीमी आँच पर तैयार की गई मलाईदार दाल मखनी।',de:'Creamy dal makhani, slow-cooked on low heat.'},
+ {id:'i18',cat:'sabzi',v:'v',hi:'मि भाजी',en:'Mix Bhaji',h:80,f:150,dh:'मिली-जुली सब्ज़ियों की भाजी।',de:'Mixed vegetable bhaji.'},
+ {id:'i19',cat:'sabzi',v:'v',hi:'सेव मसाला',en:'Sev Masala',h:70,f:140,dh:'मसालेदार ग्रेवी में कुरकुरी सेव।',de:'Crispy sev in spicy gravy.'},
+ {id:'i20',cat:'sabzi',v:'v',hi:'सेव टमाटर',en:'Sev Tamatar',h:70,f:130,dh:'टमाटर की चटपटी ग्रेवी में सेव।',de:'Sev in a tangy tomato gravy.'},
+ {id:'i21',cat:'sabzi',v:'v',hi:'मिक्स वेज',en:'Mix Veg',h:80,f:160,dh:'मौसमी सब्ज़ियों की मिक्स वेज।',de:'Seasonal mixed vegetables.'},
+ {id:'i22',cat:'sabzi',v:'v',hi:'आलू मटर',en:'Aloo Matar',h:60,f:120,dh:'आलू और मटर की घरेलू सब्ज़ी।',de:'Potato and green peas curry.'},
+ {id:'i23',cat:'sabzi',v:'v',hi:'आलू जीरा',en:'Aloo Jeera',h:60,f:120,dh:'जीरे के तड़के वाले आलू।',de:'Potatoes tempered with cumin.'},
+ {id:'i24',cat:'sabzi',v:'v',hi:'पनीर भुजिया',en:'Paneer Bhujia',h:100,f:200,dh:'भुना हुआ मसालेदार पनीर।',de:'Spiced, crumbled paneer.'},
+ {id:'i25',cat:'rice',v:'v',hi:'चावल सादा',en:'Plain Rice',h:40,f:80,dh:'सादे उबले चावल।',de:'Plain steamed rice.'},
+ {id:'i26',cat:'rice',v:'v',hi:'चावल फ्राई',en:'Fried Rice',h:80,f:150,dh:'मसाले और सब्ज़ी में भुने चावल।',de:'Rice fried with spices and vegetables.'},
+ {id:'i27',cat:'rice',v:'e',hi:'अण्डा राईस',en:'Egg Rice',h:100,f:190,dh:'अण्डे के साथ भुने चावल।',de:'Rice fried with egg.'},
+ {id:'i28',cat:'bread',v:'v',hi:'रोटी',en:'Roti',p:7,unit:'pc',dh:'गरम तवा रोटी।',de:'Fresh, hot tawa roti.'},
+ {id:'i29',cat:'bread',v:'v',hi:'मिस्सी',en:'Missi Roti',p:20,unit:'pc',dh:'बेसन मिली मसालेदार मिस्सी रोटी।',de:'Spiced gram-flour missi roti.'},
+ {id:'i30',cat:'tea',v:'v',hi:'कुल्हड़ चाय',en:'Kulhad Chai',p:15,unit:'cup',dh:'कुल्हड़ में गरमा-गरम चाय।',de:'Hot chai served in a clay kulhad.'},
+ {id:'i31',cat:'tea',v:'v',hi:'सादी चाय',en:'Regular Chai',p:10,unit:'cup',dh:'गरम सादी चाय।',de:'Hot regular chai.'},
+ {id:'i32',cat:'tea',v:'v',hi:'पावड़ चाय',en:'Pavad Chai',p:10,unit:'cup',dh:'गरम चाय।',de:'Hot chai.'}
+];
+const STATUSES=['NEW','ACCEPTED','PREPARING','READY','SERVED'];
+
+const mem={};
+/* ---------------- भाषा ---------------- */
+const S={
+ hi:{name:'राज ढाबा',tag:'स्वाद का ठिकाना',tbl:'टेबल नं.',newo:'नया ऑर्डर करें',prev:'पुराने ऑर्डर / बिल देखें',
+  half:'हाफ',full:'फुल',add:'कार्ट में जोड़ें',viewcart:'कार्ट देखें',menu:'मेन्यू',cart:'आपका कार्ट',back:'वापस',
+  emptyT:'कार्ट खाली है',emptyD:'मेन्यू से अपना पसंदीदा खाना चुनें।',sub:'उप-योग',tax:'टैक्स',total:'कुल राशि',
+  note:'खास निर्देश (वैकल्पिक)',noteph:'जैसे: कम तीखा, बिना प्याज़',place:'ऑर्डर दें',each:'प्रति',itemsw:'आइटम',
+  okT:'ऑर्डर सफलतापूर्वक दर्ज हो गया',okD:'आपका ऑर्डर सफलतापूर्वक दर्ज हो गया है।',ono:'ऑर्डर नंबर',st:'ऑर्डर स्थिति',
+  track:'अपना ऑर्डर ट्रैक करें',more:'और ऑर्डर करें',orders:'पुराने ऑर्डर / बिल',noOrders:'अभी कोई ऑर्डर नहीं है',
+  noOrdersD:'इस फोन से किए गए ऑर्डर यहाँ दिखेंगे।',tableBill:'इस फोन के ऑर्डर का कुल बिल (बिना भुगतान)',viewdet:'ऑर्डर देखें',
+  vegonly:'केवल शाकाहारी',added:'कार्ट में जोड़ा गया ✓',unavail:'उपलब्ध नहीं',pc:'प्रति नग',cup:'प्रति कप',
+  trackT:'ऑर्डर की स्थिति',lastup:'आखिरी अपडेट',notfound:'यह ऑर्डर नहीं मिला',
+  notfoundD:'सुरक्षा के लिए हर ग्राहक सिर्फ अपना ही ऑर्डर देख सकता है। कृपया उसी फोन से खोलें जिससे ऑर्डर किया था।',
+  privacy:'🔒 आपका ऑर्डर निजी है। इसे सिर्फ आप देख सकते हैं।',pay:'भुगतान काउंटर पर होगा।',
+  s1:'QR स्कैन करें',s2:'खाना चुनें',s3:'ऑर्डर दें',call:'फोन करें',itemgone:'कुछ आइटम अभी उपलब्ध नहीं हैं, उन्हें कार्ट से हटा दिया गया।',
+  st_NEW:'नया ऑर्डर',st_ACCEPTED:'स्वीकार किया गया',st_PREPARING:'तैयार हो रहा है',st_READY:'तैयार है',st_SERVED:'परोसा गया',
+  sd_NEW:'आपका ऑर्डर मिल गया है',sd_ACCEPTED:'रसोई ने आपका ऑर्डर स्वीकार किया',sd_PREPARING:'आपका खाना बन रहा है',sd_READY:'खाना तैयार है',sd_SERVED:'आपका खाना परोस दिया गया। आनंद लें!',
+  min:'मिनट पहले',now:'अभी',
+  /* staff */
+  kitchen:'किचन डैशबोर्ड',admin:'एडमिन पैनल',pin:'स्टाफ PIN',enter:'अंदर जाएँ',wrong:'PIN गलत है',stafft:'केवल स्टाफ के लिए',
+  demo:'डेमो मोड: ऑर्डर इसी फोन/ब्राउज़र में रखे जाते हैं। असली उपयोग में Supabase से जुड़ने पर सभी फोन के ऑर्डर यहाँ आएँगे।',
+  soundon:'🔔 आवाज़ चालू',soundoff:'🔕 आवाज़ बंद',newAlert:'नया ऑर्डर',noKitchen:'इस स्थिति में कोई ऑर्डर नहीं',
+  a_NEW:'स्वीकार करें',a_ACCEPTED:'बनाना शुरू करें',a_PREPARING:'तैयार है',a_READY:'परोसा गया',
+  logout:'बाहर निकलें',
+  n_dash:'डैशबोर्ड',n_new:'नए ऑर्डर',n_all:'सभी ऑर्डर',n_menu:'मेन्यू प्रबंधन',n_bills:'टेबल बिल',n_tables:'टेबल प्रबंधन',n_reports:'रिपोर्ट',
+  todayOrders:'आज के ऑर्डर',todaySales:'आज की बिक्री',waiting:'नए (इंतज़ार में)',inKitchen:'रसोई में',recent:'हाल के ऑर्डर',
+  demoAdd:'डेमो ऑर्डर जोड़ें',demoReset:'सारा डेमो डेटा हटाएँ',confirmReset:'सारा डेमो डेटा हटाना है?',
+  colNo:'ऑर्डर',colTbl:'टेबल',colTime:'समय',colItems:'आइटम',colTotal:'राशि',colSt:'स्थिति',colPay:'भुगतान',
+  paid:'चुकता',unpaid:'बाकी',all:'सभी',price:'दाम (₹)',avail:'उपलब्ध',
+  markPaid:'भुगतान हो गया (चुकता करें)',noBills:'किसी टेबल का बिल बाकी नहीं है',openOrders:'खुले ऑर्डर',
+  qrNote:'हर टेबल का अलग QR छापकर टेबल पर लगाएँ।',printQr:'सभी QR प्रिंट करें',copy:'लिंक कॉपी करें',copied:'लिंक कॉपी हो गया',open:'खोलें',
+  scopeToday:'आज',scopeAll:'अब तक',avg:'औसत ऑर्डर',byItem:'आइटम के अनुसार',qty:'संख्या',amt:'राशि',byTable:'टेबल के अनुसार',
+  noData:'अभी कोई डेटा नहीं'},
+ en:{name:'Raj Dhaba',tag:'Swad Ka Thikana',tbl:'TABLE NO.',newo:'NEW ORDER',prev:'VIEW PREVIOUS ORDERS / BILLS',
+  half:'Half',full:'Full',add:'ADD TO CART',viewcart:'VIEW CART',menu:'Menu',cart:'Your Cart',back:'Back',
+  emptyT:'Your cart is empty',emptyD:'Pick your favourite dishes from the menu.',sub:'Subtotal',tax:'Tax',total:'Total',
+  note:'Special instructions (optional)',noteph:'e.g. less spicy, no onion',place:'PLACE ORDER',each:'each',itemsw:'items',
+  okT:'ORDER PLACED SUCCESSFULLY',okD:'Your order has been placed successfully.',ono:'ORDER NUMBER',st:'ORDER STATUS',
+  track:'TRACK YOUR ORDER',more:'ORDER MORE',orders:'Previous Orders / Bills',noOrders:'No orders yet',
+  noOrdersD:'Orders placed from this phone will show up here.',tableBill:'Total bill of orders from this phone (unpaid)',viewdet:'View order',
+  vegonly:'Veg only',added:'Added to cart ✓',unavail:'Not available',pc:'per piece',cup:'per cup',
+  trackT:'Order Status',lastup:'Last updated',notfound:'Order not found',
+  notfoundD:'For privacy, each guest can only see their own order. Please open this from the phone used to order.',
+  privacy:'🔒 Your order is private. Only you can see it.',pay:'Payment is made at the counter.',
+  s1:'Scan QR',s2:'Pick food',s3:'Place order',call:'Call',itemgone:'Some items are unavailable and were removed from your cart.',
+  st_NEW:'New',st_ACCEPTED:'Accepted',st_PREPARING:'Preparing',st_READY:'Ready',st_SERVED:'Served',
+  sd_NEW:'We have received your order',sd_ACCEPTED:'The kitchen has accepted your order',sd_PREPARING:'Your food is being prepared',sd_READY:'Your food is ready',sd_SERVED:'Your food has been served. Enjoy!',
+  min:'min ago',now:'just now',
+  kitchen:'Kitchen Dashboard',admin:'Admin Panel',pin:'Staff PIN',enter:'Enter',wrong:'Wrong PIN',stafft:'Staff only',
+  demo:'Demo mode: orders are kept on this phone/browser only. After connecting Supabase, orders from every phone will appear here.',
+  soundon:'🔔 Sound on',soundoff:'🔕 Sound off',newAlert:'NEW ORDER',noKitchen:'No orders in this status',
+  a_NEW:'Accept',a_ACCEPTED:'Start preparing',a_PREPARING:'Mark ready',a_READY:'Mark served',
+  logout:'Log out',
+  n_dash:'Dashboard',n_new:'New Orders',n_all:'All Orders',n_menu:'Menu Management',n_bills:'Table Bills',n_tables:'Table Management',n_reports:'Reports',
+  todayOrders:"Today's orders",todaySales:"Today's sales",waiting:'New (waiting)',inKitchen:'In kitchen',recent:'Recent orders',
+  demoAdd:'Add demo order',demoReset:'Clear all demo data',confirmReset:'Clear all demo data?',
+  colNo:'Order',colTbl:'Table',colTime:'Time',colItems:'Items',colTotal:'Amount',colSt:'Status',colPay:'Payment',
+  paid:'Paid',unpaid:'Due',all:'All',price:'Price (₹)',avail:'Available',
+  markPaid:'Mark as Paid',noBills:'No table has a pending bill',openOrders:'open orders',
+  qrNote:'Print each table\'s own QR and place it on the table.',printQr:'Print all QR codes',copy:'Copy link',copied:'Link copied',open:'Open',
+  scopeToday:'Today',scopeAll:'All time',avg:'Average order',byItem:'By item',qty:'Qty',amt:'Amount',byTable:'By table',
+  noData:'No data yet'}
+};
+let lang=load('rd_lang','hi');
+const t=k=>(S[lang]&&S[lang][k]!=null)?S[lang][k]:(S.hi[k]||k);
+const other=()=>lang==='hi'?'en':'hi';
+const tx=(k,l)=>S[l][k];
+const nm=it=>lang==='hi'?it.hi:it.en;
+const ds=it=>lang==='hi'?it.dh:it.de;
+
+/* ---------------- STORE (असली सिस्टम में इसे Supabase से बदलें) ---------------- */
+function load(k,d){try{const v=localStorage.getItem(k);if(v!==null)return JSON.parse(v)}catch(e){}return (k in mem)?mem[k]:d}
+function save(k,v){mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+const getOrders=()=>load('rd_orders',[]);
+const setOrders=a=>save('rd_orders',a);
+const getOrder=id=>getOrders().find(o=>o.id===id);
+function setStatus(id,st){const a=getOrders();const o=a.find(x=>x.id===id);if(o){o.status=st;o.updated=Date.now();setOrders(a)}}
+function setPaid(ids){const a=getOrders();a.forEach(o=>{if(ids.includes(o.id))o.paid=true});setOrders(a)}
+const menuOv=()=>load('rd_menu',{});
+function priceOf(it,pt){const o=menuOv()[it.id];return(o&&o[pt]!=null&&!isNaN(o[pt]))?o[pt]:it[pt]}
+function isOff(it){const o=menuOv()[it.id];return!!(o&&o.off)}
+const rnd=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
+
+/* ---------------- मदद के फंक्शन ---------------- */
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rs=n=>'₹'+Number(n).toLocaleString('en-IN');
+const pad=n=>String(n).padStart(2,'0');
+const clock=ms=>new Date(ms).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+const ago=ms=>{const m=Math.floor((Date.now()-ms)/60000);return m<1?t('now'):m+' '+t('min')};
+const catOf=id=>CATS.find(c=>c.id===id);
+const itemOf=id=>MENU.find(m=>m.id===id);
+const ptLabel=pt=>pt==='h'?t('half'):pt==='f'?t('full'):'';
+function getTable(){
+  const n=parseInt(new URLSearchParams(location.search).get('table'),10);
+  if(n>=1&&n<=CFG.tables){try{sessionStorage.setItem('rd_table',n)}catch(e){}return n}
+  try{const s=parseInt(sessionStorage.getItem('rd_table'),10);if(s>=1&&s<=CFG.tables)return s}catch(e){}
+  return 5; /* डेमो में टेबल न मिले तो 5 */
+}
+const TABLE=getTable();
+function toast(msg){const el=document.getElementById('toast');el.innerHTML='<div class="toast">'+esc(msg)+'</div>';clearTimeout(toast.h);toast.h=setTimeout(()=>el.innerHTML='',1800)}
+function beep(){try{const A=window.AudioContext||window.webkitAudioContext;const c=new A();[0,.22,.44].forEach(d=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=880;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(.2,c.currentTime+d);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d+.18);o.start(c.currentTime+d);o.stop(c.currentTime+d+.2)})}catch(e){}}
+
+/* ---------------- ग्राहक: कार्ट ---------------- */
+let cart=load('rd_cart',[]);
+let noteText='';
+let vegOnly=false;
+const draft={};
+const cartCount=()=>cart.reduce((a,c)=>a+c.qty,0);
+const lineTotals=()=>{const sub=cart.reduce((a,c)=>{const it=itemOf(c.id);return a+priceOf(it,c.pt)*c.qty},0);const tax=Math.round(sub*CFG.taxPercent/100);return{sub,tax,total:sub+tax}};
+function cartAdd(id,pt,q){const l=cart.find(c=>c.id===id&&c.pt===pt);if(l)l.qty+=q;else cart.push({id,pt,qty:q});save('rd_cart',cart)}
+
+/* ---------------- ग्राहक: पेज ---------------- */
+function langSw(){return `<div class="lang"><button class="${lang==='hi'?'on':''}" data-act="lang" data-l="hi">हिंदी</button><button class="${lang==='en'?'on':''}" data-act="lang" data-l="en">English</button></div>`}
+function topbar(title,back){return `<header class="top"><div class="wrap">${back?`<button class="iconbtn" data-act="go" data-to="${back}" aria-label="${esc(t('back'))}">←</button>`:''}<h1>${esc(title)}</h1><span class="tpill">${t('tbl')} ${pad(TABLE)}</span>${langSw()}</div></header>`}
+function bi(k){return `${esc(tx(k,lang))}<small>${esc(tx(k,other()))}</small>`}
+
+function pageHome(){
+  return `<section class="hero"><div class="logo">रा</div><h1>${esc(t('name'))}</h1><div class="tag">${esc(t('tag'))}</div><div class="divider"></div>
+   <div class="row"><span class="tpill">${t('tbl')} ${pad(TABLE)}</span>${langSw()}</div></section>
+   <div class="home-actions">
+    <button class="btn btn-primary btn-lg" style="min-height:64px" data-act="go" data-to="#/menu">🛒 ${bi('newo')}</button>
+    <button class="btn btn-secondary" data-act="go" data-to="#/orders">📋 ${bi('prev')}</button>
+    <div class="steps3"><div><b>1</b>${t('s1')}</div><div><b>2</b>${t('s2')}</div><div><b>3</b>${t('s3')}</div></div>
+   </div>
+   <div class="foot">${esc(CFG.owner[lang])} · <a href="tel:${CFG.phone}">📞 ${CFG.phone}</a></div>`;
+}
+
+function cardHTML(it){
+  const single=it.p!=null;
+  const d=draft[it.id]||(draft[it.id]={pt:single?'p':'f',qty:0});
+  const off=isOff(it);
+  const inCart=cart.filter(c=>c.id===it.id).reduce((a,c)=>a+c.qty,0);
+  const cat=catOf(it.cat);
+  const thumb=it.img?`<img src="${esc(it.img)}" alt="${esc(nm(it))}" loading="lazy">`:`<span>${cat.ic}</span>`;
+  let sel;
+  if(single)sel=`<div class="single"><b>${rs(priceOf(it,'p'))}</b><small>${t(it.unit)}</small></div>`;
+  else sel=`<div class="seg">${['h','f'].map(p=>`<button class="${d.pt===p?'on':''}" data-act="pt" data-id="${it.id}" data-pt="${p}">${ptLabel(p)}<b>${rs(priceOf(it,p))}</b></button>`).join('')}</div>`;
+  const ctrl=off?`<div class="offtag">${t('unavail')}</div>`:`${sel}
+    <div class="food-act"><div class="step"><button data-act="dec" data-id="${it.id}" aria-label="−">−</button><span>${d.qty}</span><button data-act="inc" data-id="${it.id}" aria-label="+">+</button></div>
+    <button class="btn btn-primary" data-act="add" data-id="${it.id}">${t('add')}</button></div>
+    ${inCart?`<div class="incart">✓ ${inCart} ${t('itemsw')} · ${t('viewcart')}</div>`:''}`;
+  return `<article class="food ${off?'off':''}" id="card-${it.id}"><div class="food-top"><div class="thumb">${thumb}</div>
+   <div><div class="nm"><span class="vd ${it.v}"></span><span>${esc(nm(it))}</span></div><p class="ds">${esc(ds(it))}</p></div></div>${ctrl}</article>`;
+}
+function barHTML(){
+  const n=cartCount();if(!n)return'';
+  return `<div class="bar"><button class="btn btn-primary" data-act="go" data-to="#/cart"><span>🛒 ${t('viewcart')} · ${n}</span><span>${rs(lineTotals().total)}</span></button></div>`;
+}
+function pageMenu(){
+  const secs=CATS.map(c=>{
+    const items=MENU.filter(m=>m.cat===c.id&&(!vegOnly||m.v==='v'));
+    if(!items.length)return'';
+    return `<section class="sec" id="cat-${c.id}"><h2>${c.ic} ${esc(lang==='hi'?c.hi:c.en)}</h2><div class="foodgrid">${items.map(cardHTML).join('')}</div></section>`;
+  }).join('');
+  return `${topbar(t('menu'),'#/')}
+  <nav class="catnav"><div class="scroll">${CATS.map(c=>`<button class="chip" data-act="cat" data-id="${c.id}">${c.ic} ${esc(lang==='hi'?c.hi:c.en)}</button>`).join('')}</div></nav>
+  <div class="wrap"><div class="vegtoggle"><button class="sw ${vegOnly?'on':''}" data-act="veg" aria-label="${esc(t('vegonly'))}"></button><span>${t('vegonly')}</span></div>${secs}<div class="spacer"></div></div><div id="bar">${barHTML()}</div>`;
+}
+function refreshCard(id){const el=document.getElementById('card-'+id);if(el)el.outerHTML=cardHTML(itemOf(id));const b=document.getElementById('bar');if(b)b.innerHTML=barHTML()}
+
+function pageCart(){
+  if(!cart.length)return `${topbar(t('cart'),'#/menu')}<div class="wrap"><div class="empty"><div class="big">🛒</div><h2 style="margin:10px 0 6px">${t('emptyT')}</h2><p>${t('emptyD')}</p><div style="margin-top:22px"><button class="btn btn-primary btn-md" data-act="go" data-to="#/menu">${t('menu')}</button></div></div></div>`;
+  const tt=lineTotals();
+  const lines=cart.map((c,i)=>{const it=itemOf(c.id);const p=priceOf(it,c.pt);
+    return `<div class="line"><div class="li"><b>${esc(nm(it))}</b><small>${c.pt==='p'?'':ptLabel(c.pt)+' · '}${rs(p)} ${t('each')}</small></div>
+    <div class="step"><button data-act="cdec" data-i="${i}">−</button><span>${c.qty}</span><button data-act="cinc" data-i="${i}">+</button></div><div class="lt">${rs(p*c.qty)}</div></div>`}).join('');
+  return `${topbar(t('cart'),'#/menu')}<div class="wrap">
+   <div class="panel">${lines}</div>
+   <div class="panel"><div class="trow"><span>${t('sub')}</span><span>${rs(tt.sub)}</span></div>
+    ${CFG.taxPercent>0?`<div class="trow"><span>${t('tax')} (${CFG.taxPercent}%)</span><span>${rs(tt.tax)}</span></div>`:''}
+    <div class="trow big"><span>${t('total')}</span><span>${rs(tt.total)}</span></div></div>
+   <label class="lb" for="note">${t('note')}</label><textarea id="note" class="note" placeholder="${esc(t('noteph'))}">${esc(noteText)}</textarea>
+   <div class="notice">${t('pay')}</div>
+   <div class="stack"><button class="btn btn-primary btn-lg" data-act="place">${t('place')} · ${rs(tt.total)}</button><button class="btn btn-secondary btn-md" data-act="go" data-to="#/menu">+ ${t('menu')}</button></div><div class="spacer"></div></div>`;
+}
+function placeOrder(){
+  if(!cart.length)return;
+  const gone=cart.filter(c=>isOff(itemOf(c.id)));
+  if(gone.length){cart=cart.filter(c=>!isOff(itemOf(c.id)));save('rd_cart',cart);toast(t('itemgone'));render();return}
+  const items=cart.map(c=>{const it=itemOf(c.id);return{id:c.id,hi:it.hi,en:it.en,pt:c.pt,price:priceOf(it,c.pt),qty:c.qty}});
+  const sub=items.reduce((a,i)=>a+i.price*i.qty,0),tax=Math.round(sub*CFG.taxPercent/100);
+  const no=load('rd_next',CFG.firstOrderNo);save('rd_next',no+1);
+  const o={id:CFG.prefix+no,token:rnd(),table:TABLE,items,note:noteText.trim(),sub,tax,total:sub+tax,status:'NEW',created:Date.now(),updated:Date.now(),paid:false};
+  const all=getOrders();all.push(o);setOrders(all);
+  const my=load('rd_my',[]);my.push({id:o.id,token:o.token});save('rd_my',my);
+  cart=[];save('rd_cart',cart);noteText='';
+  location.hash='#/success/'+o.id;
+}
+const myToken=id=>{const m=load('rd_my',[]).find(x=>x.id===id);return m?m.token:null};
+function mineOrder(id){const o=getOrder(id);if(!o)return null;return myToken(id)===o.token?o:null}
+
+function pageSuccess(id){
+  const o=mineOrder(id);if(!o)return pageNotFound();
+  return `${topbar(t('okT').slice(0,0)||t('menu'),'')}<div class="wrap"><div class="okwrap"><div class="tick">✓</div><h1>${tx('okT',lang)}</h1><p>${t('okD')}</p>
+   <div class="ocard"><div class="lab">${t('ono')}</div><div class="num">${esc(o.id)}</div><div class="tb">${t('tbl')} ${pad(o.table)}</div><div><span class="badge ${o.status}">${t('st')}: ${t('st_'+o.status)}</span></div></div>
+   <div class="stack"><button class="btn btn-primary btn-lg" data-act="go" data-to="#/track/${o.id}">${t('track')}</button><button class="btn btn-secondary btn-md" data-act="go" data-to="#/menu">${t('more')}</button></div></div></div>`;
+}
+function pageNotFound(){return `${topbar(t('trackT'),'#/')}<div class="wrap"><div class="empty"><div class="big">🔒</div><h2 style="margin:10px 0 6px">${t('notfound')}</h2><p>${t('notfoundD')}</p><div style="margin-top:22px"><button class="btn btn-primary btn-md" data-act="go" data-to="#/">${t('back')}</button></div></div></div>`}
+function pageTrack(id){
+  const o=mineOrder(id);if(!o)return pageNotFound();
+  const cur=STATUSES.indexOf(o.status);
+  const steps=STATUSES.map((s,i)=>{
+    const cls=(s==='SERVED'&&cur===4)?'done':i<cur?'done':i===cur?('cur'+(s==='READY'?' ready':'')):'pend';
+    return `<div class="tl ${cls}"><div class="dot">${(i<cur||(s==='SERVED'&&cur===4))?'✓':(i+1)}</div><div class="tx"><b>${t('st_'+s)}</b>${i===cur?`<small>${t('sd_'+s)}</small>`:''}</div></div>`}).join('');
+  const lines=o.items.map(i=>`<li><span>${i.qty} × ${esc(lang==='hi'?i.hi:i.en)}${i.pt==='p'?'':' ('+ptLabel(i.pt)+')'}</span><span>${rs(i.price*i.qty)}</span></li>`).join('');
+  return `${topbar(t('trackT'),'#/orders')}<div class="wrap">
+   <div class="ocard" style="margin-top:20px"><div class="lab">${t('ono')}</div><div class="num">${esc(o.id)}</div><div class="tb">${t('tbl')} ${pad(o.table)}</div><span class="badge ${o.status}">${t('st_'+o.status)}</span></div>
+   <div class="panel"><div class="timeline">${steps}</div><p style="color:var(--gray);font-size:14px;margin-top:16px">${t('lastup')}: ${clock(o.updated)}</p></div>
+   <div class="panel"><ul style="list-style:none">${lines.replace(/<li>/g,'<li style="display:flex;justify-content:space-between;padding:6px 0;font-size:16px">')}</ul><div class="trow big"><span>${t('total')}</span><span>${rs(o.total)}</span></div></div>
+   <div class="notice priv">${t('privacy')}</div><div class="spacer"></div></div>`;
+}
+function pageOrders(){
+  const my=load('rd_my',[]).map(m=>mineOrder(m.id)).filter(Boolean).sort((a,b)=>b.created-a.created);
+  if(!my.length)return `${topbar(t('orders'),'#/')}<div class="wrap"><div class="empty"><div class="big">📋</div><h2 style="margin:10px 0 6px">${t('noOrders')}</h2><p>${t('noOrdersD')}</p><div style="margin-top:22px"><button class="btn btn-primary btn-md" data-act="go" data-to="#/menu">${t('newo')}</button></div></div></div>`;
+  const due=my.filter(o=>!o.paid).reduce((a,o)=>a+o.total,0);
+  const cards=my.map(o=>`<div class="ord"><div class="oh"><b>${esc(o.id)}</b><span class="badge ${o.status}" style="margin:0">${t('st_'+o.status)}</span></div>
+   <div class="sm">${t('tbl')} ${pad(o.table)} · ${clock(o.created)}</div>
+   <ul>${o.items.map(i=>`<li><span>${i.qty} × ${esc(lang==='hi'?i.hi:i.en)}${i.pt==='p'?'':' ('+ptLabel(i.pt)+')'}</span><span>${rs(i.price*i.qty)}</span></li>`).join('')}</ul>
+   <div class="ft"><span>${t('total')}</span><span>${rs(o.total)}</span></div>
+   <button class="btn btn-secondary" data-act="go" data-to="#/track/${o.id}">${t('viewdet')}</button></div>`).join('');
+  return `${topbar(t('orders'),'#/')}<div class="wrap">${cards}
+   <div class="panel"><div class="trow big" style="border-top:0;margin-top:0;padding-top:0"><span style="font-size:16px;font-weight:600;max-width:60%">${t('tableBill')}</span><span>${rs(due)}</span></div></div>
+   <div class="stack"><button class="btn btn-primary btn-md" data-act="go" data-to="#/menu">${t('newo')}</button></div><div class="spacer"></div></div>`;
+}
+
+/* ---------------- स्टाफ ---------------- */
+const isStaff=()=>{try{return sessionStorage.getItem('rd_staff')==='1'}catch(e){return mem.staff===true}};
+function gate(){
+  return `<div class="gate"><div class="logo" style="margin-bottom:10px">रा</div><h1>${esc(t('name'))}</h1><p>${t('stafft')}</p>
+   <input id="pin" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" aria-label="${esc(t('pin'))}">
+   <div id="pinerr" class="errtxt"></div><button class="btn btn-primary btn-md" data-act="login">${t('enter')}</button>
+   <div style="margin-top:16px;display:flex;justify-content:center">${langSw()}</div></div>`;
+}
+let soundOn=true;let seen=null;
+function staffHead(title,extra){return `<div class="shead"><h1>${esc(title)}</h1>${extra||''}${langSw()}<button class="smallbtn" data-act="logout">${t('logout')}</button></div><div class="demo">${t('demo')}</div>`}
+function itemsText(o){return o.items.map(i=>`<li><b>${i.qty}×</b><span>${esc(lang==='hi'?i.hi:i.en)}${i.pt==='p'?'':' ('+ptLabel(i.pt)+')'}</span></li>`).join('')}
+let ktab='NEW';
+function pageKitchen(){
+  const all=getOrders();
+  const cnt=s=>all.filter(o=>o.status===s).length;
+  const list=all.filter(o=>o.status===ktab).sort((a,b)=>a.created-b.created);
+  const tabs=STATUSES.map(s=>`<button class="tab ${ktab===s?'on':''}" data-act="ktab" data-s="${s}">${t('st_'+s)}<i>${cnt(s)}</i></button>`).join('');
+  const cards=list.length?list.map(o=>`<div class="kc ${o.status}"><div class="kh"><span class="kn">${esc(o.id)}</span><span class="kt">${t('tbl')} ${pad(o.table)}</span></div>
+    <div class="km">${clock(o.created)} · ${ago(o.created)}</div><ul>${itemsText(o)}</ul>${o.note?`<div class="kn2">📝 ${esc(o.note)}</div>`:''}
+    ${o.status!=='SERVED'?`<button class="btn ${o.status==='PREPARING'?'btn-success':'btn-primary'}" data-act="adv" data-id="${o.id}">${t('a_'+o.status)}</button>`:''}</div>`).join(''):`<div class="empty" style="grid-column:1/-1;color:#888">${t('noKitchen')}</div>`;
+  return `${staffHead('🍳 '+t('kitchen'),`<button class="smallbtn ${soundOn?'on':''}" data-act="sound">${soundOn?t('soundon'):t('soundoff')}</button>`)}<div class="kwrap"><div class="tabs">${tabs}</div><div class="kgrid">${cards}</div></div>`;
+}
+function checkAlerts(){
+  const ids=getOrders().filter(o=>o.status==='NEW').map(o=>o.id);
+  if(seen===null){seen=new Set(ids);return}
+  const fresh=ids.filter(i=>!seen.has(i));
+  ids.forEach(i=>seen.add(i));
+  if(fresh.length){
+    const o=getOrder(fresh[0]);
+    const el=document.getElementById('alert');
+    el.innerHTML=`<div class="alertbar">🔔 ${tx('newAlert',lang)} · ${esc(o.id)} · ${t('tbl')} ${pad(o.table)}</div>`;
+    if(soundOn)beep();
+    clearTimeout(checkAlerts.h);checkAlerts.h=setTimeout(()=>el.innerHTML='',7000);
+  }
+}
+const ASEC=['dash','new','all','menu','bills','tables','reports'];
+const ASEC_K={dash:'n_dash',new:'n_new',all:'n_all',menu:'n_menu',bills:'n_bills',tables:'n_tables',reports:'n_reports'};
+let afilter='ALL',rscope='today';
+const startOfDay=()=>{const d=new Date();d.setHours(0,0,0,0);return d.getTime()};
+function pageAdmin(sec){
+  if(!ASEC.includes(sec))sec='dash';
+  const nav=ASEC.map(s=>`<a href="#/admin/${s}" class="${s===sec?'on':''}">${t(ASEC_K[s])}</a>`).join('')+`<a href="#/kitchen">🍳 ${t('kitchen')}</a>`;
+  const body={dash:aDash,new:aNew,all:aAll,menu:aMenu,bills:aBills,tables:aTables,reports:aReports}[sec]();
+  return `${staffHead('🛡️ '+t('admin'))}<div class="adm"><nav class="side"><div class="brandt">${esc(t('name'))}</div>${nav}</nav><main class="amain"><h2 class="noprint-h">${t(ASEC_K[sec])}</h2>${body}</main></div>`;
+}
+function orderRow(o,withAct){return `<tr><td><b>${esc(o.id)}</b></td><td>${pad(o.table)}</td><td>${clock(o.created)}</td><td>${o.items.reduce((a,i)=>a+i.qty,0)}</td><td>${rs(o.total)}</td><td><span class="pill ${o.status}">${t('st_'+o.status)}</span></td><td><span class="pill ${o.paid?'paid':'unpaid'}">${o.paid?t('paid'):t('unpaid')}</span></td>${withAct?`<td>${o.status!=='SERVED'?`<button class="smallbtn" data-act="adv" data-id="${o.id}">${t('a_'+o.status)}</button>`:''}</td>`:''}</tr>`}
+function otable(list,withAct){
+  if(!list.length)return `<div class="empty" style="color:#888">${t('noData')}</div>`;
+  return `<div class="tscroll"><table class="t"><thead><tr><th>${t('colNo')}</th><th>${t('colTbl')}</th><th>${t('colTime')}</th><th>${t('colItems')}</th><th>${t('colTotal')}</th><th>${t('colSt')}</th><th>${t('colPay')}</th>${withAct?'<th></th>':''}</tr></thead><tbody>${list.map(o=>orderRow(o,withAct)).join('')}</tbody></table></div>`;
+}
+function aDash(){
+  const all=getOrders(),td=all.filter(o=>o.created>=startOfDay());
+  const sales=td.reduce((a,o)=>a+o.total,0);
+  const wait=all.filter(o=>o.status==='NEW').length,kit=all.filter(o=>o.status==='ACCEPTED'||o.status==='PREPARING').length;
+  return `<div class="stats"><div class="stat"><small>${t('todayOrders')}</small><b>${td.length}</b></div><div class="stat"><small>${t('todaySales')}</small><b>${rs(sales)}</b></div><div class="stat"><small>${t('waiting')}</small><b>${wait}</b></div><div class="stat"><small>${t('inKitchen')}</small><b>${kit}</b></div></div>
+  <div class="dcard"><h3>${t('recent')}</h3>${otable(all.slice().sort((a,b)=>b.created-a.created).slice(0,6),false)}</div>
+  <div class="row2 noprint"><button class="btn btn-primary" data-act="demoadd">+ ${t('demoAdd')}</button><button class="btn btn-ghost-dark" data-act="demoreset">${t('demoReset')}</button></div>`;
+}
+function aNew(){return `<div class="dcard">${otable(getOrders().filter(o=>o.status==='NEW').sort((a,b)=>a.created-b.created),true)}</div>`}
+function aAll(){
+  const chips=['ALL',...STATUSES].map(s=>`<button class="tab ${afilter===s?'on':''}" data-act="afil" data-s="${s}">${s==='ALL'?t('all'):t('st_'+s)}</button>`).join('');
+  const l=getOrders().filter(o=>afilter==='ALL'||o.status===afilter).sort((a,b)=>b.created-a.created);
+  return `<div class="tabs">${chips}</div><div class="dcard">${otable(l,true)}</div>`;
+}
+function aMenu(){
+  const rows=CATS.map(c=>`<h3 style="margin:18px 0 4px;color:var(--gold)">${c.ic} ${esc(lang==='hi'?c.hi:c.en)}</h3>`+MENU.filter(m=>m.cat===c.id).map(it=>{
+    const off=isOff(it);
+    const inputs=it.p!=null?`<label>${t('price')}<input type="number" min="0" inputmode="numeric" value="${priceOf(it,'p')}" data-act="mprice" data-id="${it.id}" data-pt="p"></label>`
+      :['h','f'].map(p=>`<label>${ptLabel(p)} ${t('price')}<input type="number" min="0" inputmode="numeric" value="${priceOf(it,p)}" data-act="mprice" data-id="${it.id}" data-pt="${p}"></label>`).join('');
+    return `<div class="mrow"><div class="mn"><b><span class="vd ${it.v}" style="margin-right:6px;vertical-align:-2px"></span>${esc(nm(it))}</b><small>${esc(lang==='hi'?it.en:it.hi)}</small></div>${inputs}<label>${t('avail')}<button class="sw ${off?'':'on'}" data-act="mtoggle" data-id="${it.id}" aria-label="${esc(t('avail'))}"></button></label></div>`}).join('')).join('');
+  return `<div class="dcard" style="margin-top:0">${rows}</div>`;
+}
+function aBills(){
+  const open=getOrders().filter(o=>!o.paid);
+  const by={};open.forEach(o=>{(by[o.table]=by[o.table]||[]).push(o)});
+  const tabs=Object.keys(by).map(Number).sort((a,b)=>a-b);
+  if(!tabs.length)return `<div class="dcard"><div class="empty" style="color:#888">${t('noBills')}</div></div>`;
+  return tabs.map(n=>{const l=by[n];const tot=l.reduce((a,o)=>a+o.total,0);
+    return `<div class="dcard"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><h3 style="margin:0">${t('tbl')} ${pad(n)} <small style="color:#aaa;font-weight:400">· ${l.length} ${t('openOrders')}</small></h3><b style="font-size:24px;color:var(--gold)">${rs(tot)}</b></div>
+    <div class="tscroll" style="margin-top:8px"><table class="t"><tbody>${l.map(o=>`<tr><td><b>${esc(o.id)}</b></td><td>${clock(o.created)}</td><td>${o.items.map(i=>i.qty+'× '+esc(lang==='hi'?i.hi:i.en)).join(', ')}</td><td style="text-align:right">${rs(o.total)}</td></tr>`).join('')}</tbody></table></div>
+    <div class="row2"><button class="btn btn-success" data-act="settle" data-t="${n}">${t('markPaid')}</button></div></div>`}).join('');
+}
+function tableUrl(n){return location.origin.replace('null','')+location.pathname+'?table='+n}
+function aTables(){
+  const cards=Array.from({length:CFG.tables},(_,i)=>i+1).map(n=>`<div class="tcard"><h3>${esc(t('name'))}</h3><small>${t('tbl')} ${pad(n)}</small><div class="qr" data-qr="${esc(tableUrl(n))}"></div><div class="lk">${esc(tableUrl(n))}</div>
+   <div class="row2 noprint" style="margin-top:8px"><a class="btn btn-secondary" style="text-decoration:none;min-height:42px;font-size:15px;color:#121212" href="?table=${n}#/" target="_blank" rel="noopener">${t('open')}</a></div></div>`).join('');
+  return `<p style="color:#bbb;margin-bottom:12px" class="noprint">${t('qrNote')}</p><div class="row2 noprint" style="margin:0 0 14px"><button class="btn btn-primary" data-act="printqr">🖨️ ${t('printQr')}</button></div><div class="tgrid">${cards}</div>`;
+}
+function aReports(){
+  let l=getOrders();if(rscope==='today')l=l.filter(o=>o.created>=startOfDay());
+  const sales=l.reduce((a,o)=>a+o.total,0);
+  const it={},tb={};
+  l.forEach(o=>{tb[o.table]=tb[o.table]||{n:0,a:0};tb[o.table].n++;tb[o.table].a+=o.total;
+    o.items.forEach(i=>{const k=i.id+(i.pt==='p'?'':'|'+i.pt);it[k]=it[k]||{hi:i.hi,en:i.en,pt:i.pt,q:0,a:0};it[k].q+=i.qty;it[k].a+=i.qty*i.price})});
+  const irows=Object.values(it).sort((a,b)=>b.a-a.a).map(r=>`<tr><td>${esc(lang==='hi'?r.hi:r.en)}${r.pt==='p'?'':' ('+ptLabel(r.pt)+')'}</td><td>${r.q}</td><td>${rs(r.a)}</td></tr>`).join('');
+  const trows=Object.keys(tb).map(Number).sort((a,b)=>a-b).map(k=>`<tr><td>${t('tbl')} ${pad(k)}</td><td>${tb[k].n}</td><td>${rs(tb[k].a)}</td></tr>`).join('');
+  return `<div class="tabs"><button class="tab ${rscope==='today'?'on':''}" data-act="rscope" data-s="today">${t('scopeToday')}</button><button class="tab ${rscope==='all'?'on':''}" data-act="rscope" data-s="all">${t('scopeAll')}</button></div>
+   <div class="stats" style="margin-top:12px"><div class="stat"><small>${t('colNo')}</small><b>${l.length}</b></div><div class="stat"><small>${t('todaySales')}</small><b>${rs(sales)}</b></div><div class="stat"><small>${t('avg')}</small><b>${l.length?rs(Math.round(sales/l.length)):'—'}</b></div></div>
+   <div class="dcard"><h3>${t('byItem')}</h3>${irows?`<div class="tscroll"><table class="t"><thead><tr><th></th><th>${t('qty')}</th><th>${t('amt')}</th></tr></thead><tbody>${irows}</tbody></table></div>`:`<div class="empty" style="color:#888">${t('noData')}</div>`}</div>
+   <div class="dcard"><h3>${t('byTable')}</h3>${trows?`<div class="tscroll"><table class="t"><thead><tr><th></th><th>${t('colNo')}</th><th>${t('amt')}</th></tr></thead><tbody>${trows}</tbody></table></div>`:`<div class="empty" style="color:#888">${t('noData')}</div>`}</div>`;
+}
+function demoOrder(){
+  const pick=MENU.filter(m=>!isOff(m)).sort(()=>Math.random()-.5).slice(0,2+Math.floor(Math.random()*2));
+  const items=pick.map(it=>{const pt=it.p!=null?'p':(Math.random()<.5?'h':'f');return{id:it.id,hi:it.hi,en:it.en,pt,price:priceOf(it,pt),qty:1+Math.floor(Math.random()*2)}});
+  const sub=items.reduce((a,i)=>a+i.price*i.qty,0),tax=Math.round(sub*CFG.taxPercent/100);
+  const no=load('rd_next',CFG.firstOrderNo);save('rd_next',no+1);
+  const a=getOrders();a.push({id:CFG.prefix+no,token:rnd(),table:1+Math.floor(Math.random()*CFG.tables),items,note:'',sub,tax,total:sub+tax,status:'NEW',created:Date.now(),updated:Date.now(),paid:false});setOrders(a);
+}
+
+/* ---------------- राउटर ---------------- */
+let lastHash=null,lastSig=null;
+function render(){
+  const h=location.hash||'#/';const p=h.slice(2).split('/');const r=p[0]||'home';
+  const staff=(r==='kitchen'||r==='admin');
+  document.body.className=staff?'staff':'cust';
+  document.documentElement.lang=lang==='hi'?'hi':'en';
+  let html;
+  if(staff&&!isStaff())html=gate();
+  else switch(r){
+    case 'menu':html=pageMenu();break;
+    case 'cart':html=pageCart();break;
+    case 'success':html=pageSuccess(decodeURIComponent(p[1]||''));break;
+    case 'track':html=pageTrack(decodeURIComponent(p[1]||''));break;
+    case 'orders':html=pageOrders();break;
+    case 'kitchen':html=pageKitchen();break;
+    case 'admin':html=pageAdmin(p[1]||'dash');break;
+    default:html=pageHome();
+  }
+  document.getElementById('app').innerHTML=html;
+  if(h!==lastHash){window.scrollTo(0,0);lastHash=h;if(staff)seen=null}
+  if(staff&&isStaff())checkAlerts();
+  if(r==='admin'&&p[1]==='tables'&&window.QRCode){document.querySelectorAll('[data-qr]').forEach(el=>{el.innerHTML='';try{new QRCode(el,{text:el.dataset.qr,width:140,height:140,colorDark:'#121212',colorLight:'#ffffff'})}catch(e){}})}
+  lastSig=localStorage.getItem?(function(){try{return localStorage.getItem('rd_orders')}catch(e){return null}})():null;
+}
+window.addEventListener('hashchange',render);
+setInterval(()=>{ /* कोई नया ऑर्डर/स्टेटस बदला हो तो पेज अपने आप अपडेट */
+  const r=(location.hash||'#/').slice(2).split('/');
+  const live=['track','orders','kitchen','success'].includes(r[0])||(r[0]==='admin'&&['dash','new','all','bills','reports',undefined].includes(r[1]));
+  if(!live)return;
+  let sig=null;try{sig=localStorage.getItem('rd_orders')}catch(e){}
+  if(sig!==lastSig){const a=document.activeElement;if(a&&/INPUT|TEXTAREA/.test(a.tagName))return;render()}
+  else if(r[0]==='kitchen'&&isStaff()){} 
+},2000);
+
+/* ---------------- क्लिक / बदलाव ---------------- */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]');if(!b||b.tagName==='INPUT')return;
+  const a=b.dataset.act,id=b.dataset.id;
+  switch(a){
+    case 'go':location.hash=b.dataset.to;break;
+    case 'lang':lang=b.dataset.l;save('rd_lang',lang);render();break;
+    case 'cat':{const el=document.getElementById('cat-'+id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===b));break}
+    case 'veg':vegOnly=!vegOnly;render();break;
+    case 'pt':draft[id].pt=b.dataset.pt;refreshCard(id);break;
+    case 'inc':draft[id].qty=Math.min(20,draft[id].qty+1);refreshCard(id);break;
+    case 'dec':draft[id].qty=Math.max(0,draft[id].qty-1);refreshCard(id);break;
+    case 'add':{const d=draft[id];cartAdd(id,d.pt,Math.max(1,d.qty));d.qty=0;refreshCard(id);toast(t('added'));break}
+    case 'cinc':{cart[+b.dataset.i].qty=Math.min(50,cart[+b.dataset.i].qty+1);save('rd_cart',cart);render();break}
+    case 'cdec':{const i=+b.dataset.i;cart[i].qty--;if(cart[i].qty<=0)cart.splice(i,1);save('rd_cart',cart);render();break}
+    case 'place':b.disabled=true;placeOrder();break;
+    case 'login':{const v=document.getElementById('pin').value;if(v===CFG.staffPin){try{sessionStorage.setItem('rd_staff','1')}catch(x){mem.staff=true}render()}else document.getElementById('pinerr').textContent=t('wrong');break}
+    case 'logout':try{sessionStorage.removeItem('rd_staff')}catch(x){mem.staff=false}render();break;
+    case 'sound':soundOn=!soundOn;if(soundOn)beep();render();break;
+    case 'ktab':ktab=b.dataset.s;render();break;
+    case 'adv':{const o=getOrder(id);if(o){const n=STATUSES[STATUSES.indexOf(o.status)+1];if(n){setStatus(id,n);if((location.hash||'').startsWith('#/kitchen'))ktab=n==='SERVED'?ktab:n;render()}}break}
+    case 'afil':afilter=b.dataset.s;render();break;
+    case 'rscope':rscope=b.dataset.s;render();break;
+    case 'mtoggle':{const m=menuOv();m[id]=m[id]||{};m[id].off=!m[id].off;save('rd_menu',m);render();break}
+    case 'settle':{const n=+b.dataset.t;setPaid(getOrders().filter(o=>o.table===n&&!o.paid).map(o=>o.id));render();break}
+    case 'demoadd':demoOrder();render();break;
+    case 'demoreset':if(confirm(t('confirmReset'))){['rd_orders','rd_my','rd_next','rd_cart'].forEach(k=>{delete mem[k];try{localStorage.removeItem(k)}catch(x){}});cart=[];seen=null;render()}break;
+    case 'printqr':window.print();break;
+  }
+});
+document.addEventListener('change',e=>{
+  const i=e.target;
+  if(i.dataset&&i.dataset.act==='mprice'){const v=parseInt(i.value,10);const m=menuOv();m[i.dataset.id]=m[i.dataset.id]||{};if(isNaN(v)||v<0){delete m[i.dataset.id][i.dataset.pt]}else m[i.dataset.id][i.dataset.pt]=v;save('rd_menu',m);toast('✓')}
+});
+document.addEventListener('input',e=>{if(e.target.id==='note')noteText=e.target.value});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='pin'){const b=document.querySelector('[data-act="login"]');if(b)b.click()}});
+render();
+</script>
+</body>
+</html>
