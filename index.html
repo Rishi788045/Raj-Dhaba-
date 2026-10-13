@@ -290,7 +290,7 @@ const CFG={
   owner:{hi:'प्रो. बबलू यादव',en:'Prop. Bablu Yadav'},
   sbUrl:'https://lbtkmxfsxdmblyqkoqea.supabase.co',        // Supabase > Project Settings > API > Project URL
   sbKey:'sb_publishable_OrB4BZFfvoIA1FN1bTe2JQ_na-v9HP8',
-  upi:'7880452969@SLC',payee:'Raj Dhaba',   // वहीं 'anon public' key
+  upi:'paytmqr5yuz3r@ptys',payee:'Raj Dhaba',   // वहीं 'anon public' key
   firstOrderNo:1025,
   prefix:'ST-'
 };
@@ -564,7 +564,7 @@ const isMine=o=>{const m=load('rd_my',[]).find(x=>x.id===o.id);return !!((m&&m.t
 const myToken=id=>{const m=load('rd_my',[]).find(x=>x.id===id);return m?m.token:null};
 function mineOrder(id){const o=getOrder(id);return o&&isMine(o)?o:null}
 
-const upiLink=o=>`upi://pay?pa=${encodeURIComponent(CFG.upi)}&pn=${encodeURIComponent(CFG.payee)}&am=${o.total}&cu=INR`;
+const upiLink=o=>`upi://pay?pa=${encodeURIComponent(CFG.upi)}&pn=${encodeURIComponent(CFG.payee)}&am=${o.total}&cu=INR&tn=${encodeURIComponent('Order '+o.id)}`;
 function upiModal(o){if(!(o.pay==='upi'&&!o.paid&&o.status!=='CANCELLED'&&upiPop))return'';const hi=lang==='hi';
   return `<div class="upimask"><div class="upibox"><img class="logoimg" src="${LOGO}" style="width:120px" alt=""><div class="upiamt">${rs(o.total)}</div><div class="upisub">${esc(o.id)} · ${t('tbl')} ${pad(o.table)}</div>
   <a class="upibtn" href="${upiLink(o)}">📱 ${hi?'UPI से भुगतान करें':'Pay with UPI'}</a>
