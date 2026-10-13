@@ -255,10 +255,18 @@ table.t td{padding:10px 6px;border-bottom:1px solid #2a2a2a;vertical-align:middl
 .pill.CANCELLED,.badge.CANCELLED{background:#5a2222;color:#ffb4b4}
 #bill{display:none}
 @media print{body.pb>*:not(#bill){display:none!important}body.pb #bill{display:block!important;position:static}
- #bill{color:#000;font-family:'Noto Sans Devanagari',sans-serif;max-width:300px;margin:0 auto}
+ #bill{color:#000;font-family:'Noto Sans Devanagari',sans-serif;width:72mm;margin:0 auto;page:bill;padding:2mm 0}
  #bill .bl{text-align:center}#bill img{width:170px;display:block;margin:0 auto 6px}#bill h2{font-size:18px;margin:2px 0}#bill .bm{font-size:12px}
  #bill table{width:100%;font-size:13px;text-align:left}#bill hr{border:0;border-top:1px dashed #000;margin:8px 0}
  #bill .br{display:flex;justify-content:space-between;font-size:13px}#bill .br.big{font-size:18px;font-weight:800}}
+</style>
+<style>
+@page bill{size:80mm auto;margin:0}
+.upicp{margin-top:12px;padding:13px 18px;min-height:48px;border-radius:12px;border:2px solid #C6A15B;background:#121212;color:#f1d58a;font-size:16px;font-weight:700;letter-spacing:.3px}
+.billview{max-height:92vh;overflow:auto}
+.billview .bl{text-align:center;color:#121212}.billview .bl img{width:120px;margin:4px auto;display:block;border-radius:12px}
+.billview .bl h2{font-size:18px;margin:4px 0}.billview .bm{font-size:13px;color:#555}.billview hr{border:0;border-top:1px dashed #999;margin:8px 0}
+.billview table{width:100%;font-size:14px;text-align:left}.billview .br{display:flex;justify-content:space-between;font-size:14px}.billview .br.big{font-size:20px;font-weight:800}
 </style>
 </head>
 <body>
@@ -407,14 +415,14 @@ const ds=it=>lang==='hi'?it.dh:it.de;
 /* ---------------- STORE (असली सिस्टम में इसे Supabase से बदलें) ---------------- */
 function load(k,d){try{const v=localStorage.getItem(k);if(v!==null)return JSON.parse(v)}catch(e){}return (k in mem)?mem[k]:d}
 function save(k,v){mem[k]=v;if(k==='rd_menu'){MO=v;pushMenu(v)}try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-let RECOVERY=false,ORD=[],SNAP={},MO={},SESSION=null;
+var MYMOB;let RECOVERY=false,ORD=[],SNAP={},MO={},SESSION=null;
 const sb=(window.supabase&&/^https?:/.test(CFG.sbUrl))?supabase.createClient(CFG.sbUrl,CFG.sbKey):null;
 const getOrders=()=>ORD;
 const sigOf=()=>ORD.map(o=>o.id+':'+o.updated+(o.paid?1:0)).join('|')+JSON.stringify(MO);
 async function pull(){if(!sb)return;try{
   const s=await sb.from('settings').select('value').eq('key','menu').maybeSingle();if(s.data)MO=s.data.value||{};applyCustom();
   let r;if(SESSION)r=await sb.from('orders').select('data').order('created',{ascending:false}).limit(1000);
-  else{const my=load('rd_my',[]);r=my.length?await sb.rpc('my_orders',{p:my}):{data:[]}}
+  else{const my=load('rd_my',[]);const a=my.length?await sb.rpc('my_orders',{p:my}):{data:[]};const b=MYMOB?await sb.rpc('orders_by_mobile',{p:MYMOB}):{data:[]};const m={};[...(a.data||[]),...(b.data||[])].forEach(x=>m[x.id]=x);r={data:Object.values(m)}}
   if(r.data){ORD=r.data.map(x=>x.data);SNAP={};ORD.forEach(o=>SNAP[o.id]=JSON.stringify(o))}
 }catch(e){console.error(e)}}
 function pushMenu(v){if(sb&&SESSION)sb.from('settings').upsert({key:'menu',value:v}).then(r=>{if(r.error)toast('⚠ '+r.error.message)})}
@@ -454,9 +462,10 @@ function unlockAudio(){try{AC=AC||new(window.AudioContext||window.webkitAudioCon
 function bell(t0,f,vol){const c=AC;[[1,1],[2.01,.45],[3.02,.22],[4.2,.1]].forEach(([m,g])=>{const o=c.createOscillator(),a=c.createGain();o.type='sine';o.frequency.value=f*m;o.connect(a);a.connect(c.destination);
   a.gain.setValueAtTime(0.0001,t0);a.gain.exponentialRampToValueAtTime(vol*g,t0+.015);a.gain.exponentialRampToValueAtTime(.0001,t0+1.6);o.start(t0);o.stop(t0+1.7)})}
 function beep(){try{unlockAudio();const t0=AC.currentTime+.05;[523.25,659.25,783.99,1046.5].forEach((f,i)=>bell(t0+i*.28,f,.55));[1046.5,783.99,1046.5].forEach((f,i)=>bell(t0+1.6+i*.3,f,.5));if(navigator.vibrate)navigator.vibrate([250,120,250,120,400])}catch(e){}}
-function chime(){try{unlockAudio();const t0=AC.currentTime+.05;[783.99,1046.5,1318.5].forEach((f,i)=>bell(t0+i*.22,f,.4));if(navigator.vibrate)navigator.vibrate([200,100,200])}catch(e){}}
+function chime(){try{unlockAudio();const t0=AC.currentTime+.05;[783.99,1046.5,1318.5].forEach((f,i)=>bell(t0+i*.22,f,.26));if(navigator.vibrate)navigator.vibrate([200,100,200])}catch(e){}}
 
 /* ---------------- ग्राहक: कार्ट ---------------- */
+MYMOB=load('rd_mob','');let custName=load('rd_cn',''),custMob=MYMOB,billPop=null,AUTOP=load('rd_autop',false),PS=null,PQ=[],PB=false;
 let payMode='cash',upiPop=false,CTX={};
 let cart=load('rd_cart',[]);
 let noteText='';
@@ -527,32 +536,40 @@ function pageCart(){
     ${CFG.taxPercent>0?`<div class="trow"><span>${t('tax')} (${CFG.taxPercent}%)</span><span>${rs(tt.tax)}</span></div>`:''}
     <div class="trow big"><span>${t('total')}</span><span>${rs(tt.total)}</span></div></div>
    <label class="lb" for="note">${t('note')}</label><textarea id="note" class="note" placeholder="${esc(t('noteph'))}">${esc(noteText)}</textarea>
+   <div class="panel"><b>${lang==='hi'?'आपकी जानकारी':'Your details'}</b>
+     <input id="cname" value="${esc(custName)}" placeholder="${lang==='hi'?'आपका नाम':'Your name'}" autocomplete="name" style="width:100%;padding:13px;border:1px solid var(--gold);border-radius:10px;font-size:16px;margin:8px 0">
+     <input id="cmob" type="tel" inputmode="numeric" maxlength="10" value="${esc(custMob)}" placeholder="${lang==='hi'?'मोबाइल नंबर (10 अंक)':'Mobile number (10 digits)'}" autocomplete="tel" style="width:100%;padding:13px;border:1px solid var(--gold);border-radius:10px;font-size:16px">
+     <small style="display:block;margin-top:6px;color:var(--gray)">${lang==='hi'?'इसी नंबर से आप अपने ऑर्डर और बिल देख पाएँगे।':'Use this number to see your orders and bills.'}</small></div>
    <div class="notice" style="background:#fff"><b>${lang==='hi'?'भुगतान कैसे करेंगे?':'How will you pay?'}</b><div class="seg" style="margin-top:8px"><button class="${payMode==='cash'?'on':''}" data-act="paym" data-m="cash">💵 ${lang==='hi'?'कैश':'Cash'}</button><button class="${payMode==='upi'?'on':''}" data-act="paym" data-m="upi">📱 UPI</button></div><small style="display:block;margin-top:8px;color:var(--gray)">${payMode==='upi'?(lang==='hi'?'ऑर्डर के बाद UPI से भुगतान का बटन खुलेगा।':'A UPI pay button opens after you order.'):(lang==='hi'?'भुगतान काउंटर पर कैश से होगा।':'Pay cash at the counter.')}</small></div>
    <div class="stack"><button class="btn btn-primary btn-lg" data-act="place">${t('place')} · ${rs(tt.total)}</button><button class="btn btn-secondary btn-md" data-act="go" data-to="#/menu">+ ${t('menu')}</button></div><div class="spacer"></div></div>`;
 }
 async function placeOrder(){
   if(!cart.length)return;
+  const mob=custMob.replace(/\D/g,'').slice(-10);
+  if(!custName.trim()||mob.length!==10){toast(lang==='hi'?'नाम और 10 अंकों का मोबाइल नंबर डालें':'Enter your name and 10-digit mobile number');const pb=document.querySelector('[data-act="place"]');if(pb)pb.disabled=false;return}
+  MYMOB=mob;save('rd_mob',mob);save('rd_cn',custName.trim());
   const gone=cart.filter(c=>isOff(itemOf(c.id)));
   if(gone.length){cart=cart.filter(c=>!isOff(itemOf(c.id)));save('rd_cart',cart);toast(t('itemgone'));render();return}
   const items=cart.map(c=>{const it=itemOf(c.id);return{id:c.id,hi:it.hi,en:it.en,pt:c.pt,price:priceOf(it,c.pt),qty:c.qty}});
   const sub=items.reduce((a,i)=>a+i.price*i.qty,0),tax=Math.round(sub*CFG.taxPercent/100);
   const no=await nextNo();
-  const o={id:CFG.prefix+no,token:rnd(),table:TABLE,items,note:noteText.trim(),sub,tax,total:sub+tax,status:'NEW',pay:payMode,created:Date.now(),updated:Date.now(),paid:false};
+  const o={id:CFG.prefix+no,token:rnd(),table:TABLE,name:custName.trim(),mobile:mob,items,note:noteText.trim(),sub,tax,total:sub+tax,status:'NEW',pay:payMode,created:Date.now(),updated:Date.now(),paid:false};
   if(payMode==='upi')upiPop=true;
   const all=getOrders();all.push(o);setOrders(all);
   const my=load('rd_my',[]);my.push({id:o.id,token:o.token});save('rd_my',my);
   cart=[];save('rd_cart',cart);noteText='';
   location.hash='#/success/'+o.id;
 }
+const isMine=o=>{const m=load('rd_my',[]).find(x=>x.id===o.id);return !!((m&&m.token===o.token)||(MYMOB&&o.mobile===MYMOB))};
 const myToken=id=>{const m=load('rd_my',[]).find(x=>x.id===id);return m?m.token:null};
-function mineOrder(id){const o=getOrder(id);if(!o)return null;return myToken(id)===o.token?o:null}
+function mineOrder(id){const o=getOrder(id);return o&&isMine(o)?o:null}
 
-const upiLink=o=>`upi://pay?pa=${encodeURIComponent(CFG.upi)}&pn=${encodeURIComponent(CFG.payee)}&am=${o.total}&cu=INR&tn=${encodeURIComponent(o.id)}`;
+const upiLink=o=>`upi://pay?pa=${encodeURIComponent(CFG.upi)}&pn=${encodeURIComponent(CFG.payee)}&am=${o.total}&cu=INR`;
 function upiModal(o){if(!(o.pay==='upi'&&!o.paid&&o.status!=='CANCELLED'&&upiPop))return'';const hi=lang==='hi';
   return `<div class="upimask"><div class="upibox"><img class="logoimg" src="${LOGO}" style="width:120px" alt=""><div class="upiamt">${rs(o.total)}</div><div class="upisub">${esc(o.id)} · ${t('tbl')} ${pad(o.table)}</div>
   <a class="upibtn" href="${upiLink(o)}">📱 ${hi?'UPI से भुगतान करें':'Pay with UPI'}</a>
   <div class="upisub">${hi?'दबाते ही GPay, PhonePe, Paytm आदि खुल जाएँगे':'Opens GPay, PhonePe, Paytm & more'}</div>
-  <button class="smallbtn" data-act="upicopy" style="margin-top:10px">${esc(CFG.upi)} · ${hi?'कॉपी':'Copy'}</button>
+  <button class="smallbtn upicp" data-act="upicopy">${esc(CFG.upi)} · ${hi?'कॉपी':'Copy'}</button>
   <button class="upix" data-act="upiclose">${hi?'बाद में':'Later'}</button></div></div>`}
 function pageSuccess(id){
   const o=mineOrder(id);if(!o)return pageNotFound();
@@ -575,16 +592,17 @@ function pageTrack(id){
    <div class="panel"><ul style="list-style:none">${lines.replace(/<li>/g,'<li style="display:flex;justify-content:space-between;padding:6px 0;font-size:16px">')}</ul><div class="trow big"><span>${t('total')}</span><span>${rs(o.total)}</span></div></div>
    <div class="notice priv">${t('privacy')}</div><div class="spacer"></div></div>`;
 }
+function lookupBox(){const hi=lang==='hi';return `<div class="panel" style="margin-top:14px"><b>📱 ${hi?'मोबाइल नंबर से अपने ऑर्डर देखें':'See your orders by mobile number'}</b><input id="lm" type="tel" inputmode="numeric" maxlength="10" value="${esc(MYMOB)}" placeholder="${hi?'10 अंकों का मोबाइल नंबर':'10-digit mobile number'}" style="width:100%;padding:13px;border:1px solid var(--gold);border-radius:10px;font-size:16px;margin:8px 0"><button class="btn btn-primary btn-md" data-act="lookup">${hi?'मेरे ऑर्डर देखें':'Show my orders'}</button></div>`}
 function pageOrders(){
-  const my=load('rd_my',[]).map(m=>mineOrder(m.id)).filter(Boolean).sort((a,b)=>b.created-a.created);
-  if(!my.length)return `${topbar(t('orders'),'#/')}<div class="wrap"><div class="empty"><div class="big">📋</div><h2 style="margin:10px 0 6px">${t('noOrders')}</h2><p>${t('noOrdersD')}</p><div style="margin-top:22px"><button class="btn btn-primary btn-md" data-act="go" data-to="#/menu">${t('newo')}</button></div></div></div>`;
+  const my=ORD.filter(isMine).sort((a,b)=>b.created-a.created);
+  if(!my.length)return `${topbar(t('orders'),'#/')}<div class="wrap">${lookupBox()}<div class="empty"><div class="big">📋</div><h2 style="margin:10px 0 6px">${t('noOrders')}</h2><p>${t('noOrdersD')}</p><div style="margin-top:22px"><button class="btn btn-primary btn-md" data-act="go" data-to="#/menu">${t('newo')}</button></div></div></div>`;
   const due=my.filter(o=>!o.paid&&o.status!=='CANCELLED').reduce((a,o)=>a+o.total,0);
   const cards=my.map(o=>`<div class="ord"><div class="oh"><b>${esc(o.id)}</b><span class="badge ${o.status}" style="margin:0">${t('st_'+o.status)}</span></div>
    <div class="sm">${t('tbl')} ${pad(o.table)} · ${clock(o.created)}</div>
    <ul>${o.items.map(i=>`<li><span>${i.qty} × ${esc(lang==='hi'?i.hi:i.en)}${i.pt==='p'?'':' ('+ptLabel(i.pt)+')'}</span><span>${rs(i.price*i.qty)}</span></li>`).join('')}</ul>
    <div class="ft"><span>${t('total')}</span><span>${rs(o.total)}</span></div>
-   <button class="btn btn-secondary" data-act="go" data-to="#/track/${o.id}">${t('viewdet')}</button></div>`).join('');
-  return `${topbar(t('orders'),'#/')}<div class="wrap">${cards}
+   <button class="btn btn-secondary" data-act="go" data-to="#/track/${o.id}">${t('viewdet')}</button>${o.paid?`<button class="btn btn-primary" style="margin-top:8px" data-act="billopen" data-id="${o.id}">🧾 ${lang==='hi'?'बिल देखें':'View bill'}</button>`:''}</div>`).join('');
+  return `${topbar(t('orders'),'#/')}<div class="wrap">${lookupBox()}${cards}
    <div class="panel"><div class="trow big" style="border-top:0;margin-top:0;padding-top:0"><span style="font-size:16px;font-weight:600;max-width:60%">${t('tableBill')}</span><span>${rs(due)}</span></div></div>
    <div class="stack"><button class="btn btn-primary btn-md" data-act="go" data-to="#/menu">${t('newo')}</button></div><div class="spacer"></div></div>`;
 }
@@ -619,7 +637,7 @@ async function doLogin(){const e=document.getElementById('pinerr'),hi=lang==='hi
   if(r.error){e.textContent=hi?'नंबर या पासवर्ड गलत है':'Wrong number or password';return}
   SESSION=r.data.session;await pull();render()}
 let soundOn=true;let seen=null;
-function staffHead(title,extra){return `<div class="shead"><h1>${esc(title)}</h1>${extra||''}${langSw()}<button class="smallbtn" data-act="logout">${t('logout')}</button></div><div class="demo">${t('demo')}</div>`}
+function staffHead(title,extra){return `<div class="shead"><h1>${esc(title)}</h1>${extra||''}<button class="smallbtn ${AUTOP?'on':''}" data-act="autop">🖨 Auto-print ${AUTOP?'ON':'OFF'}</button>${langSw()}<button class="smallbtn" data-act="logout">${t('logout')}</button></div><div class="demo">${t('demo')}</div>`}
 function itemsText(o){return o.items.map(i=>`<li><b>${i.qty}×</b><span>${esc(lang==='hi'?i.hi:i.en)}${i.pt==='p'?'':' ('+ptLabel(i.pt)+')'}</span></li>`).join('')}
 let ktab='NEW';
 function pageKitchen(){
@@ -628,7 +646,7 @@ function pageKitchen(){
   const list=all.filter(o=>o.status===ktab).sort((a,b)=>a.created-b.created);
   const tabs=STATUSES.map(s=>`<button class="tab ${ktab===s?'on':''}" data-act="ktab" data-s="${s}">${t('st_'+s)}<i>${cnt(s)}</i></button>`).join('');
   const cards=list.length?list.map(o=>`<div class="kc ${o.status}"><div class="kh"><span class="kn">${esc(o.id)}</span><span class="kt">${t('tbl')} ${pad(o.table)}</span></div>
-    <div class="km">${clock(o.created)} · ${ago(o.created)}</div><ul>${itemsText(o)}</ul>${o.note?`<div class="kn2">📝 ${esc(o.note)}</div>`:''}
+    <div class="km">${clock(o.created)} · ${ago(o.created)}${o.name?' · '+esc(o.name):''} · ${o.pay==='upi'?'UPI':'Cash'}</div><ul>${itemsText(o)}</ul>${o.note?`<div class="kn2">📝 ${esc(o.note)}</div>`:''}
     ${o.status!=='SERVED'?`<button class="btn ${o.status==='PREPARING'?'btn-success':'btn-primary'}" data-act="adv" data-id="${o.id}">${t('a_'+o.status)}</button>`:''}</div>`).join(''):`<div class="empty" style="grid-column:1/-1;color:#888">${t('noKitchen')}</div>`;
   return `${staffHead('🍳 '+t('kitchen'),`<button class="smallbtn ${soundOn?'on':''}" data-act="sound">${soundOn?t('soundon'):t('soundoff')}</button>`)}<div class="kwrap"><div class="tabs">${tabs}</div><div class="kgrid">${cards}</div></div>`;
 }
@@ -712,15 +730,25 @@ function aReports(){
    <div class="dcard"><h3>${t('byItem')}</h3>${irows?`<div class="tscroll"><table class="t"><thead><tr><th></th><th>${t('qty')}</th><th>${t('amt')}</th></tr></thead><tbody>${irows}</tbody></table></div>`:`<div class="empty" style="color:#888">${t('noData')}</div>`}</div>
    <div class="dcard"><h3>${t('byTable')}</h3>${trows?`<div class="tscroll"><table class="t"><thead><tr><th></th><th>${t('colNo')}</th><th>${t('amt')}</th></tr></thead><tbody>${trows}</tbody></table></div>`:`<div class="empty" style="color:#888">${t('noData')}</div>`}</div>`;
 }
-function printBill(ids){const os=getOrders().filter(o=>ids.includes(o.id)&&o.status!=='CANCELLED');if(!os.length)return;
-  const rows={};os.forEach(o=>o.items.forEach(i=>{const k=i.id+i.pt;(rows[k]=rows[k]||{n:lang==='hi'?i.hi:i.en,pt:i.pt,p:i.price,q:0}).q+=i.qty}));
-  const sub=os.reduce((a,o)=>a+o.sub,0),tax=os.reduce((a,o)=>a+o.tax,0),tot=sub+tax,d=new Date();
-  const el=document.getElementById('bill');el.innerHTML=`<div class="bl"><img src="${LOGO}" alt=""><h2>${esc(CFG.owner[lang])}</h2><div class="bm">${CFG.phone}</div><hr>
-   <div class="bm">${t('tbl')} ${pad(os[0].table)} · ${d.toLocaleDateString('en-IN')} ${clock(d)}<br>${os.map(o=>o.id).join(', ')}</div><hr>
+function billHTML(os){const hi=lang==='hi',rows={};os.forEach(o=>o.items.forEach(i=>{const k=i.id+i.pt;(rows[k]=rows[k]||{n:hi?i.hi:i.en,pt:i.pt,p:i.price,q:0}).q+=i.qty}));
+  const sub=os.reduce((a,o)=>a+o.sub,0),tax=os.reduce((a,o)=>a+o.tax,0),tot=sub+tax,d=new Date(),o0=os[0],paid=os.every(o=>o.paid),pm=o0.pay==='upi'?'UPI':'Cash';
+  return `<div class="bl"><img src="${LOGO}" alt=""><h2>${esc(CFG.owner[lang])}</h2><div class="bm">${CFG.phone}</div><hr>
+   <div class="bm">${t('tbl')} ${pad(o0.table)} · ${d.toLocaleDateString('en-IN')} ${clock(d)}<br>${os.map(o=>o.id).join(', ')}${o0.name?'<br>'+esc(o0.name)+(o0.mobile?' · '+o0.mobile:''):''}</div><hr>
    <table>${Object.values(rows).map(r=>`<tr><td>${esc(r.n)}${r.pt==='p'?'':' ('+ptLabel(r.pt)+')'}<br><small>${r.q} × ${rs(r.p)}</small></td><td style="text-align:right">${rs(r.p*r.q)}</td></tr>`).join('')}</table><hr>
    ${tax?`<div class="br"><span>${t('sub')}</span><span>${rs(sub)}</span></div><div class="br"><span>${t('tax')}</span><span>${rs(tax)}</span></div>`:''}
-   <div class="br big"><span>${t('total')}</span><span>${rs(tot)}</span></div><div class="bm">${os.every(o=>o.paid)?'PAID ✓':''}</div><hr><div class="bm">धन्यवाद! फिर पधारिए 🙏<br>Thank you, visit again</div></div>`;
-  document.body.classList.add('pb');setTimeout(()=>{window.print();setTimeout(()=>document.body.classList.remove('pb'),500)},150)}
+   <div class="br big"><span>${t('total')}</span><span>${rs(tot)}</span></div><div class="bm"><b>${paid?'PAID ✓':'UNPAID'} · ${pm}</b></div><hr><div class="bm">धन्यवाद! फिर पधारिए 🙏<br>Thank you, visit again</div></div>`}
+function kotHTML(o){return `<div class="bl"><h2>🍳 KITCHEN ORDER</h2><div class="bm"><b style="font-size:22px">${t('tbl')} ${pad(o.table)}</b><br>${esc(o.id)} · ${clock(o.created)}${o.name?'<br>'+esc(o.name):''}<br>${o.pay==='upi'?'UPI':'Cash'}</div><hr>
+  <table>${o.items.map(i=>`<tr><td style="font-size:17px"><b>${i.qty} ×</b> ${esc(i.hi||i.en)}${i.pt==='p'?'':' ('+(i.pt==='h'?'हाफ':'फुल')+')'}</td></tr>`).join('')}</table>${o.note?`<hr><div class="bm">📝 ${esc(o.note)}</div>`:''}</div>`}
+function doPrint(html){document.getElementById('bill').innerHTML=html;document.body.classList.add('pb');setTimeout(()=>{window.print();setTimeout(()=>document.body.classList.remove('pb'),500)},150)}
+function printBill(ids){const os=getOrders().filter(o=>ids.includes(o.id)&&o.status!=='CANCELLED');if(!os.length)return;doPrint(billHTML(os))}
+function qp(f){PQ.push(f);if(!PB)runQ()}
+function runQ(){const f=PQ.shift();if(!f){PB=false;return}PB=true;f();setTimeout(runQ,3000)}
+function autoPrintCheck(){const cur={};ORD.forEach(o=>cur[o.id]=[o.status,!!o.paid]);
+  if(PS&&AUTOP)ORD.forEach(o=>{const p=PS[o.id];if(!p||o.status==='CANCELLED')return;
+    if(p[0]==='NEW'&&o.status!=='NEW')qp(()=>doPrint(kotHTML(o)));
+    if(o.paid&&!p[1])qp(()=>doPrint(billHTML([o])))});
+  PS=cur}
+function billModal(o){return `<div class="upimask"><div class="upibox billview"><div style="color:#2e7d4f;font-weight:800;font-size:18px;margin-bottom:6px">✓ ${lang==='hi'?'भुगतान मिल गया – आपका बिल':'Payment received – your bill'}</div>${billHTML([o])}<button class="upibtn" data-act="bprint" data-id="${o.id}" style="font-size:18px;padding:14px">🖨️ ${lang==='hi'?'बिल प्रिंट / सेव करें':'Print / Save bill'}</button><button class="upix" data-act="billclose">${lang==='hi'?'बंद करें':'Close'}</button></div></div>`}
 function demoOrder(){
   const pick=MENU.filter(m=>!isOff(m)).sort(()=>Math.random()-.5).slice(0,2+Math.floor(Math.random()*2));
   const items=pick.map(it=>{const pt=it.p!=null?'p':(Math.random()<.5?'h':'f');return{id:it.id,hi:it.hi,en:it.en,pt,price:priceOf(it,pt),qty:1+Math.floor(Math.random()*2)}});
@@ -749,6 +777,7 @@ function render(){
     case 'admin':html=pageAdmin(p[1]||'dash');break;
     default:html=pageHome();
   }
+  if(!staff&&billPop){const bo=getOrder(billPop);if(bo)html+=billModal(bo)}
   document.getElementById('app').innerHTML=html;
   if(h!==lastHash){window.scrollTo(0,0);lastHash=h;if(staff)seen=null}
   if(staff&&isStaff())checkAlerts();
@@ -760,7 +789,11 @@ setInterval(async()=>{ /* कोई नया ऑर्डर/स्टेटस
   const r=(location.hash||'#/').slice(2).split('/');
   const live=['track','orders','kitchen','success'].includes(r[0])||(r[0]==='admin'&&['dash','new','all','bills','reports',undefined].includes(r[1]));
   if(!live)return;
-  await pull();const sig=sigOf();if(!isStaff()){const cur={};ORD.forEach(o=>cur[o.id]=o.status);if(window.PV){const ch=ORD.find(o=>PV[o.id]&&PV[o.id]!==o.status);if(ch){chime();toast((lang==='hi'?'🔔 ऑर्डर ':'🔔 Order ')+ch.id+' · '+t('st_'+ch.status))}}window.PV=cur}
+  await pull();const sig=sigOf();if(!isStaff()){const cur={};ORD.forEach(o=>cur[o.id]=[o.status,!!o.paid]);
+    if(window.PV)ORD.forEach(o=>{const p=PV[o.id];if(!p)return;
+      if(o.paid&&!p[1]&&o.status!=='CANCELLED'){billPop=o.id;chime();render()}
+      else if(p[0]!==o.status){chime();toast((lang==='hi'?'🔔 ऑर्डर ':'🔔 Order ')+o.id+' · '+t('st_'+o.status))}});
+    window.PV=cur}else autoPrintCheck();
   if(sig!==lastSig){const a=document.activeElement;if(a&&/INPUT|TEXTAREA/.test(a.tagName))return;render()}
   else if(r[0]==='kitchen'&&isStaff()){} 
 },2000);
@@ -781,6 +814,11 @@ document.addEventListener('click',e=>{unlockAudio();
     case 'cinc':{cart[+b.dataset.i].qty=Math.min(50,cart[+b.dataset.i].qty+1);save('rd_cart',cart);render();break}
     case 'cdec':{const i=+b.dataset.i;cart[i].qty--;if(cart[i].qty<=0)cart.splice(i,1);save('rd_cart',cart);render();break}
     case 'place':b.disabled=true;placeOrder();break;
+    case 'lookup':{const v=document.getElementById('lm').value.replace(/\D/g,'').slice(-10);if(v.length!==10){toast(lang==='hi'?'10 अंकों का मोबाइल नंबर डालें':'Enter 10-digit mobile number');break}MYMOB=v;custMob=v;save('rd_mob',v);pull().then(render);break}
+    case 'billopen':billPop=id;render();break;
+    case 'billclose':billPop=null;render();break;
+    case 'bprint':printBill([id]);break;
+    case 'autop':AUTOP=!AUTOP;save('rd_autop',AUTOP);render();break;
     case 'login':doLogin();break;
     case 'forgot':doForgot();break;
     case 'setpw':doSetPw();break;
@@ -813,7 +851,7 @@ document.addEventListener('change',e=>{
   const i=e.target;
   if(i.dataset&&i.dataset.act==='mprice'){const v=parseInt(i.value,10);const m=menuOv();m[i.dataset.id]=m[i.dataset.id]||{};if(isNaN(v)||v<0){delete m[i.dataset.id][i.dataset.pt]}else m[i.dataset.id][i.dataset.pt]=v;saveMenu(m);toast('✓')}
 });
-document.addEventListener('input',e=>{if(e.target.id==='note')noteText=e.target.value});
+document.addEventListener('input',e=>{if(e.target.id==='note')noteText=e.target.value;if(e.target.id==='cname')custName=e.target.value;if(e.target.id==='cmob')custMob=e.target.value.replace(/\D/g,'').slice(0,10)});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='pw'){const b=document.querySelector('[data-act="login"]');if(b)b.click()}});
 if(sb)sb.auth.onAuthStateChange((ev,se)=>{SESSION=se;if(ev==='PASSWORD_RECOVERY'){RECOVERY=true;location.hash='#/admin/dash'}render()});
 if(sb)sb.auth.getSession().then(r=>{SESSION=r.data.session;return pull()}).then(render);
