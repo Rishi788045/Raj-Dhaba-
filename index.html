@@ -572,11 +572,11 @@ const myToken=id=>{const m=load('rd_my',[]).find(x=>x.id===id);return m?m.token:
 function mineOrder(id){const o=getOrder(id);return o&&isMine(o)?o:null}
 
 const UPIS=[{v:'paytm.s3vnex3@pty',t:'Paytm',bg:'linear-gradient(135deg,#00b9f1,#0a6fd6)',fg:'#fff',qr:QR_A},{v:'9616452969@mbk',t:'MobiKwik',bg:'linear-gradient(135deg,#1f3fbf,#3b5bdb)',fg:'#fff',qr:QR_B}];
-const upiLink=(o,v)=>`upi://pay?pa=${encodeURIComponent(v)}&pn=${encodeURIComponent(CFG.payee)}&am=${o.total}&cu=INR&tn=${encodeURIComponent('Order '+o.id)}`;
+const upiLink=(o,v)=>`upi://pay?pa=${encodeURIComponent(v)}&pn=${encodeURIComponent(CFG.payee)}&cu=INR&tn=${encodeURIComponent('Order '+o.id)}`;
 function upiModal(o){if(!(o.pay==='upi'&&!o.paid&&o.status!=='CANCELLED'&&upiPop))return'';const hi=lang==='hi';
   return `<div class="upimask"><div class="upibox"><img class="logoimg" src="${LOGO}" style="width:110px" alt=""><div class="upiamt">${rs(o.total)}</div><div class="upisub">${esc(o.id)} · ${t('tbl')} ${pad(o.table)}</div>
   ${UPIS.map(u=>`<div class="upiopt"><a class="upibtn" style="background:${u.bg};color:${u.fg}" href="${upiLink(o,u.v)}">📱 ${u.t} ${hi?'से भुगतान करें':'– Pay now'}</a><details open><summary>${hi?'QR / UPI ID देखें':'Show QR / UPI ID'}</summary><img class="upiqr" src="${u.qr}" alt="QR"><button class="smallbtn upicp" data-act="upicopy" data-v="${u.v}">${u.v} · ${hi?'कॉपी':'Copy'}</button></details></div>`).join('')}
-  <div class="upisub">${hi?'बटन न चले तो QR स्कैन करें, या ID कॉपी करके रकम खुद डालकर भेजें।':'If the button fails, scan the QR or copy the ID and enter the amount yourself.'}</div>
+  <div class="upisub" style="margin-top:14px;font-weight:700;color:#121212">${hi?'ऐप खुलने पर रकम '+rs(o.total)+' खुद डालकर भेजें':'In the app, enter '+rs(o.total)+' and pay'}</div><div class="upisub">${hi?'बटन न चले तो QR स्कैन करें, या ID कॉपी करके भेजें।':'If the button fails, scan the QR or copy the ID.'}</div>
   <button class="upix" data-act="upiclose">${hi?'बाद में':'Later'}</button></div></div>`}
 function pageSuccess(id){
   const o=mineOrder(id);if(!o)return pageNotFound();
