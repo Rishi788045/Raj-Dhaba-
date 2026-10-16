@@ -272,6 +272,7 @@ table.t td{padding:10px 6px;border-bottom:1px solid #2a2a2a;vertical-align:middl
 <style>.upiopt{margin-top:14px;padding:12px;border:1px solid #e8dcc0;border-radius:18px;background:#fffdf7}.upiopt .upibtn{margin-top:0;font-size:19px;padding:17px}.upiopt summary{margin-top:10px;color:#6b6b6b;font-size:14px;cursor:pointer}</style>
 <style>.upicopybig{display:block;width:100%;margin-top:14px;padding:22px 12px;border-radius:18px;border:2px solid #b8923f;background:linear-gradient(135deg,#b8923f,#e6c77a);color:#121212;font-size:21px;font-weight:800;box-shadow:0 6px 20px rgba(198,161,91,.5)}.upicopybig .upiid{display:block;margin-top:6px;font-size:16px;font-weight:700;word-break:break-all}
 .upisteps{text-align:left;margin:14px 4px 10px 22px;padding:0;font-size:14px;color:#333;line-height:1.5}.upiapps{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.upiapps button{padding:15px 6px;border-radius:12px;border:2px solid #d8c9a3;background:#fff;color:#121212;font-weight:800;font-size:16px}</style>
+<style>.upipebtn{display:block;margin-top:16px;padding:19px 10px;border-radius:16px;background:#121212;color:#f1d58a;font-weight:800;font-size:20px;text-decoration:none;border:2px solid #C6A15B;box-shadow:0 6px 20px rgba(0,0,0,.25)}.upipebtn small{display:block;margin-top:4px;font-size:13px;font-weight:600;color:#d8c9a3}</style>
 </head>
 <body>
 <div id="app"></div><div id="bill"></div>
@@ -576,7 +577,9 @@ const UPI_APPS=[['PhonePe','phonepe://'],['Google Pay','tez://upi/'],['Paytm','p
 async function copyTxt(v){try{await navigator.clipboard.writeText(v);return true}catch(e){try{const t=document.createElement('textarea');t.value=v;t.style.cssText='position:fixed;opacity:0';document.body.appendChild(t);t.select();const ok=document.execCommand('copy');t.remove();return ok}catch(x){return false}}}
 function upiModal(o){if(!(o.pay==='upi'&&!o.paid&&o.status!=='CANCELLED'&&upiPop))return'';const hi=lang==='hi';
   return `<div class="upimask"><div class="upibox"><img class="logoimg" src="${LOGO}" style="width:100px" alt=""><div class="upiamt">${rs(o.total)}</div><div class="upisub">${esc(o.id)} · ${t('tbl')} ${pad(o.table)}</div>
-  <button class="upicopybig" data-act="upicopy"><span class="cpl">📋 ${hi?'UPI ID कॉपी करें':'Copy UPI ID'}</span><span class="upiid">${CFG.upi}</span></button>
+  <a class="upipebtn" href="https://upi.pe/?pa=${encodeURIComponent(CFG.upi)}&am=${Number(o.total).toFixed(2)}" target="_blank" rel="noopener">⚡ ${hi?'रकम भरकर भुगतान करें':'Pay with amount filled'}<small>UPIPE · ${rs(o.total)}</small></a>
+  <div class="upisub" style="margin-top:12px">${hi?'यह न चले तो नीचे वाला तरीका अपनाएँ':'If this fails, use the method below'}</div>
+  <button class="upicopybig" data-act="upicopy" style="margin-top:6px"><span class="cpl">📋 ${hi?'UPI ID कॉपी करें':'Copy UPI ID'}</span><span class="upiid">${CFG.upi}</span></button>
   <ol class="upisteps"><li>${hi?'ऊपर के बटन से UPI ID कॉपी करें':'Copy the UPI ID with the button above'}</li><li>${hi?'नीचे से अपना UPI ऐप खोलें':'Open your UPI app below'}</li><li>${hi?'ऐप में "UPI ID से भुगतान" चुनें, ID पेस्ट करें, रकम <b>'+rs(o.total)+'</b> डालकर भेजें':'In the app choose "Pay to UPI ID", paste it, enter <b>'+rs(o.total)+'</b> and pay'}</li></ol>
   <div class="upisub"><b>${hi?'ऐप खोलें':'Open app'}</b></div>
   <div class="upiapps">${UPI_APPS.map(a=>`<button data-act="upiapp" data-u="${a[1]}">${a[0]}</button>`).join('')}</div>
