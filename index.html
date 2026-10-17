@@ -356,6 +356,11 @@ body.staff{background:#0e0d0a}
 .gc>*:nth-child(1){animation-delay:.1s}.gc>*:nth-child(2){animation-delay:.25s}.gc>*:nth-child(3){animation-delay:.45s}.gc>*:nth-child(4){animation-delay:.6s}.gc>*:nth-child(5){animation-delay:.75s}.gc>*:nth-child(6){animation-delay:.9s}.gc>*:nth-child(7){animation-delay:1.05s}.gc>*:nth-child(8){animation-delay:1.2s}.gc>*:nth-child(9){animation-delay:1.4s}.gc>*:nth-child(10){animation-delay:1.6s}
 @keyframes gin{to{opacity:1;transform:none}}
 </style>
+<style>
+.gglow{display:block;width:min(80vw,330px);margin:0 auto}
+.gglow .logoimg{width:100%!important;max-width:none!important;margin:0!important;border-radius:26px;display:block}
+.gh{margin-top:18px!important}
+</style>
 </head>
 <body>
 <div id="app"></div><div id="bill"></div>
@@ -615,11 +620,11 @@ function aCust(){const n=CUS.length,cur=WQ>=0&&CUS[WQ]?CUS[WQ]:null,wa=m=>`https
   const queue=cur?`<div class="dcard" style="border:2px solid #25D366"><h3>💬 ${WQ+1} / ${n}</h3><div style="font-size:20px;font-weight:800">${esc(cur.name||'ग्राहक')} · ${cur.mobile}</div><div class="row2" style="margin-top:10px"><a class="btn btn-success" href="${wa(cur.mobile)}" target="_blank" rel="noopener">WhatsApp खोलें</a><button class="btn btn-primary" data-act="wnext">अगला →</button></div><button class="smallbtn" style="margin-top:8px" data-act="wstop">रोकें</button></div>`:'';
   return `<div class="dcard" style="margin-top:0"><h3>📣 ऑफर संदेश</h3><textarea id="offt" class="note" style="min-height:110px">${esc(OFFT)}</textarea><div class="row2" style="margin-top:8px"><button class="btn btn-success" data-act="wqstart">💬 WhatsApp से भेजें</button><button class="btn btn-secondary" data-act="copynums">📋 नंबर कॉपी</button><button class="btn btn-secondary" data-act="csv">⬇ CSV</button></div><small>WhatsApp हर ग्राहक के लिए एक-एक करके खुलेगा; "अगला →" दबाते जाएँ।</small></div>${queue}
   <div class="dcard"><h3>👥 कुल ग्राहक: ${n}</h3>${n?`<div style="overflow-x:auto"><table class="ctb"><tr><th>नाम</th><th>मोबाइल</th><th>विज़िट</th><th>स्टाम्प</th><th>आख़िरी</th><th></th></tr>${CUS.map(c=>`<tr><td>${esc(c.name||'')}</td><td>${c.mobile}</td><td>${c.visits||0}</td><td>${c.stamps||0}/7</td><td>${c.last_visit?new Date(c.last_visit).toLocaleDateString('en-IN'):'–'}</td><td><a href="${wa(c.mobile)}" target="_blank" rel="noopener">💬</a> <a href="sms:+91${c.mobile}?body=${encodeURIComponent(OFFT)}">✉</a></td></tr>`).join('')}</table></div>`:'अभी कोई ग्राहक नहीं'}</div>`}
-function softWelcome(){try{unlockAudio();if(AC.state!=='running'){PENDSND=true;AC.resume().then(()=>{if(PENDSND&&AC.state==='running'){PENDSND=false;softWelcome()}}).catch(()=>{});return}const t0=AC.currentTime+.05;[783.99,987.77,1174.66,1567.98].forEach((f,i)=>bell(t0+i*.2,f,.22));if(navigator.vibrate)navigator.vibrate(60)}catch(e){}}
+function softWelcome(){try{unlockAudio();if(AC.state!=='running'){PENDSND=true;AC.resume().then(()=>{if(PENDSND&&AC.state==='running'){PENDSND=false;softWelcome()}}).catch(()=>{});return}const t0=AC.currentTime+.05;bell(t0,1318.51,.28);bell(t0+.5,1046.5,.28);bell(t0+1.15,1318.51,.12);if(navigator.vibrate)navigator.vibrate(60)}catch(e){}}
 function openGate(){if(GOPEN||!WEL)return;GOPEN=true;const g=document.getElementById('gate4');if(g)g.classList.add('open');softWelcome();setTimeout(()=>{WEL=false;GOPEN=false;WTIMER=0;try{sessionStorage.setItem('rd_wel','1')}catch(x){}render()},1050)}
 function gateHTML(){const hi=lang==='hi',ph=String(CFG.phone).replace(/\D/g,'').slice(-10),shown='+91 '+ph.slice(0,5)+' '+ph.slice(5);
   return `<div id="gate4" class="gate4${GOPEN?' open':''}" data-act="welcome"><div class="gq q1"></div><div class="gq q2"></div><div class="gq q3"></div><div class="gq q4"></div>
-  <div class="gc"><div class="gtop">WELCOME TO</div><div class="gglow"><img class="logoimg" src="${LOGO}" style="width:178px;margin:0" alt=""></div>
+  <div class="gc"><div class="gglow"><img class="logoimg" src="${LOGO}" alt=""></div>
   <h1 class="gh">RAJ DHABA</h1><div class="gdiv"><i></i><b>◆</b><i></i></div>
   <div class="gw2">राज ढाबा · ${esc(t('tag'))}</div><div class="gnam">🙏 ${hi?'नमस्ते, आपका स्वागत है':'Namaste, you are most welcome'}</div>
   <div class="gowner">${esc(CFG.owner[lang])}</div><a class="gcall" href="tel:+91${ph}" onclick="event.stopPropagation()">📞 ${shown}</a>
@@ -1086,6 +1091,7 @@ document.addEventListener('change',e=>{
 });
 document.addEventListener('input',e=>{if(e.target.id==='note')noteText=e.target.value;if(e.target.id==='cname')custName=e.target.value;if(e.target.id==='offt')OFFT=e.target.value;if(e.target.id==='cmob')custMob=e.target.value.replace(/\D/g,'').slice(0,10)});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='pw'){const b=document.querySelector('[data-act="login"]');if(b)b.click()}});
+document.addEventListener('touchend',()=>{unlockAudio()},{once:true,passive:true});
 setInterval(()=>{if(WPH&&(location.hash||'').startsWith('#/waiter'))wpull()},3000);
 if(sb)sb.auth.onAuthStateChange((ev,se)=>{if(ev==='SIGNED_OUT')SESSION=null;else if(se)SESSION=se;if(ev==='PASSWORD_RECOVERY'){RECOVERY=true;location.hash='#/admin/dash'}render()});
 if(sb)sb.auth.getSession().then(r=>{SESSION=r.data.session;return pull()}).then(render);
