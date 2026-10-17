@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#121212">
+<meta name="theme-color" content="#0e0d0a">
 <title>राज ढाबा – QR ऑर्डर</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Playfair+Display:wght@600;700&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Tiro+Devanagari+Hindi:ital@0;1&family=Noto+Serif+Devanagari:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --black:#121212;--gold:#C6A15B;--ivory:#FAF7F0;--charcoal:#252525;--gray:#77736B;
@@ -288,6 +288,74 @@ table.t td{padding:10px 6px;border-bottom:1px solid #2a2a2a;vertical-align:middl
 .ctb{width:100%;font-size:14px;border-collapse:collapse}.ctb td,.ctb th{padding:8px 6px;border-bottom:1px solid #eee;text-align:left;white-space:nowrap}
 </style>
 <style>.ubar{height:14px;border-radius:8px;background:#e8e4d8;overflow:hidden;margin:8px 0}.ubar i{display:block;height:100%}</style>
+<style>
+:root{--serif:'Cormorant Garamond','Playfair Display','Tiro Devanagari Hindi','Noto Serif Devanagari',serif;--display:'Cinzel','Playfair Display','Tiro Devanagari Hindi',serif}
+h1,h2,h3,.upiamt,.wl1,.vcard h2{font-family:var(--serif)!important;font-weight:700;letter-spacing:.4px}
+h2{font-size:27px}h3{font-size:21px}
+.hero h1,.welcome h1,.gate4 h1{font-family:var(--display)!important;letter-spacing:3px;font-weight:700}
+.hero .tag,.gw2,.gtab{font-family:var(--serif);letter-spacing:2px}
+.payhint{color:#B42318;font-weight:800;animation:glow 1.2s ease-in-out 3}
+.gate4{position:fixed;inset:0;z-index:300;overflow:hidden;cursor:pointer}
+.gq{position:absolute;width:50.3%;height:50.3%;background-image:radial-gradient(circle at 50% 50%,#33260f 0,#0b0a07 72%);background-size:200% 200%;transition:transform 1s cubic-bezier(.77,0,.18,1)}
+.q1{top:0;left:0;background-position:0 0;border-right:1px solid #8a7335;border-bottom:1px solid #8a7335}.q2{top:0;right:0;background-position:100% 0;border-left:1px solid #8a7335;border-bottom:1px solid #8a7335}
+.q3{bottom:0;left:0;background-position:0 100%;border-right:1px solid #8a7335;border-top:1px solid #8a7335}.q4{bottom:0;right:0;background-position:100% 100%;border-left:1px solid #8a7335;border-top:1px solid #8a7335}
+.gate4.open .q1{transform:translate(-102%,-102%)}.gate4.open .q2{transform:translate(102%,-102%)}.gate4.open .q3{transform:translate(-102%,102%)}.gate4.open .q4{transform:translate(102%,102%)}
+.gc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;padding:20px;transition:opacity .7s,transform 1s}
+.gate4.open .gc{opacity:0;transform:scale(1.4)}
+.gglow{border-radius:26px;box-shadow:0 0 70px rgba(230,199,122,.4);animation:gl 2.4s ease-in-out infinite}@keyframes gl{50%{box-shadow:0 0 100px rgba(230,199,122,.7)}}
+.nam{font-size:62px;margin-top:14px;animation:nam 2s ease-in-out infinite}@keyframes nam{50%{transform:scale(1.14)}}
+.gw1{font-family:var(--serif);font-size:34px;color:#f1d58a;margin-top:2px}.gh{font-size:26px;color:#fff;margin:6px 0}.gw2{color:#d8c9a3;font-size:18px}
+.gtab{margin-top:16px;padding:8px 20px;border:1px solid #C6A15B;border-radius:30px;color:#C6A15B;font-size:15px}.gskip{margin-top:26px;color:#8f866f;font-size:13px;letter-spacing:1px}
+</style>
+<style>
+:root{--black:#0e0d0a;--gold:#C9A45C;--ivory:#FBF8F1;--charcoal:#2a2620;--gray:#7a7466;--line:#EADFC4;--green:#1f7a4d;--err:#8f1d2c;--warn:#a9741b;--dcard:#1a1812;--dline:#332d1f}
+body{background:radial-gradient(120% 55% at 50% 0,#fffdf8 0,var(--ivory) 65%)}
+body.staff{background:#0e0d0a}
+::selection{background:#C9A45C;color:#111}
+.btn{letter-spacing:.3px}
+.btn-primary{background:linear-gradient(135deg,#b8923f 0%,#f1d58a 50%,#b8923f 100%);color:#17130a;border-color:#e9d18a;box-shadow:0 6px 18px rgba(184,146,63,.32)}
+.btn-secondary{background:#fffdf7;border-color:#C9A45C;color:#2a2620}
+.btn-success{background:linear-gradient(135deg,#17693f,#2a9a62);color:#fff}
+.btn-error{background:linear-gradient(135deg,#7a1523,#a8283a)}
+.panel,.notice{border-color:#EADFC4;box-shadow:0 10px 28px rgba(80,60,15,.07)}
+.notice{background:#fcf6e6}
+.top{background:linear-gradient(180deg,#15130d,#0b0a07);border-bottom:1px solid #C9A45C;box-shadow:0 2px 14px rgba(0,0,0,.35)}
+.hero{background:radial-gradient(120% 90% at 50% 0,#3a2c12 0,#14110a 55%,#0b0a07 100%);border-bottom:1px solid #C9A45C}
+.chip{border-color:#EADFC4;background:#fffdf7}
+.chip.on{background:linear-gradient(135deg,#14110a,#2a2210);color:#f1d58a;border-color:#C9A45C}
+.pill.NEW{background:linear-gradient(135deg,#b8923f,#f1d58a);color:#17130a}
+.bar{background:linear-gradient(to top,rgba(11,10,7,.98),rgba(11,10,7,.92));border-top:1px solid #C9A45C}
+.dcard{border-color:#332d1f;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.sec h2::after{background:linear-gradient(90deg,#C9A45C,transparent)}
+.divider{background:linear-gradient(90deg,transparent,#C9A45C,transparent)}
+.svcbtn{display:flex;align-items:center;gap:14px;width:100%;margin-top:10px;padding:16px 18px;border-radius:16px;border:1.5px solid #C9A45C;background:#fffdf7;font-size:19px;font-weight:700;color:#17130a;font-family:var(--serif)}
+.svcbtn span{font-size:28px}.svcbtn:active{background:#f6ecce}
+.nchips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}.nchips button{padding:8px 14px;border-radius:999px;border:1px solid #C9A45C;background:#fffdf7;color:#2a2620;font-size:14px;font-weight:600}
+</style>
+<style>
+.gc{gap:0}.gc>*{opacity:0;transform:translateY(14px);animation:gin .75s cubic-bezier(.2,.7,.2,1) forwards}
+.gc>*:nth-child(1){animation-delay:.1s}.gc>*:nth-child(2){animation-delay:.25s}.gc>*:nth-child(3){animation-delay:.5s}.gc>*:nth-child(4){animation-delay:.65s}.gc>*:nth-child(5){animation-delay:.8s}.gc>*:nth-child(6){animation-delay:.95s}.gc>*:nth-child(7){animation-delay:1.1s}.gc>*:nth-child(8){animation-delay:1.25s}.gc>*:nth-child(9){animation-delay:1.4s}.gc>*:nth-child(10){animation-delay:1.55s}.gc>*:nth-child(11){animation-delay:1.7s}.gc>*:nth-child(12){animation-delay:1.8s}
+@keyframes gin{to{opacity:1;transform:none}}
+.gorn{display:flex;align-items:center;gap:12px;width:240px;max-width:70%;color:#C9A45C;margin:10px 0}.gorn i{flex:1;height:1px;background:linear-gradient(90deg,transparent,#C9A45C)}.gorn i:last-child{background:linear-gradient(90deg,#C9A45C,transparent)}
+.gnam{font-family:var(--serif);font-size:24px;color:#f1d58a;margin-top:10px}.gwel{letter-spacing:6px;font-size:12px;color:#bfb392;margin-top:6px}
+.gbrand{font-family:var(--display)!important;font-size:clamp(28px,9.5vw,42px);letter-spacing:.14em;color:#f1d58a;text-shadow:0 0 26px rgba(230,199,122,.35);margin:4px 0 2px;white-space:nowrap}
+.gtag{font-family:var(--serif);font-style:italic;font-size:19px;color:#d8c9a3;letter-spacing:2px}
+.gphone{margin-top:6px;padding:10px 24px;border:1px solid #C9A45C;border-radius:30px;color:#f1d58a;font-size:21px;letter-spacing:1.5px;font-family:var(--serif);font-weight:700;background:rgba(201,164,92,.08)}
+.gown{color:#bfb392;font-size:14px;margin-top:8px;letter-spacing:1px}.gate4 .gtab{margin-top:12px}
+.gprog{width:140px;height:2px;background:#3a3220;overflow:hidden;border-radius:2px;margin-top:16px}.gprog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#b8923f,#f1d58a);animation:gprog 3.4s linear forwards}@keyframes gprog{to{width:100%}}
+</style>
+<style>
+.gtop{font-family:var(--display);font-size:13px;letter-spacing:6px;color:#C9A45C}
+.gh{font-size:35px!important;letter-spacing:6px!important;margin:12px 0 4px!important;background:linear-gradient(100deg,#b8923f 20%,#fff3c9 40%,#b8923f 60%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;animation:shim 3.2s linear infinite}
+@keyframes shim{to{background-position:-200% 0}}
+.gdiv{display:flex;align-items:center;gap:10px;width:200px;margin:6px 0 10px}.gdiv i{flex:1;height:1px;background:linear-gradient(90deg,transparent,#C9A45C)}.gdiv i:last-child{background:linear-gradient(90deg,#C9A45C,transparent)}.gdiv b{color:#C9A45C;font-size:11px}
+.gnam{margin-top:10px;color:#f1d58a;font-family:var(--serif);font-size:19px}
+.gowner{margin-top:16px;color:#d8c9a3;font-family:var(--serif);font-size:19px;letter-spacing:1px}
+.gcall{display:inline-block;margin-top:8px;padding:10px 22px;border-radius:30px;background:linear-gradient(135deg,#b8923f,#f1d58a);color:#17130a!important;font-weight:800;font-size:19px;letter-spacing:1px;text-decoration:none;box-shadow:0 6px 18px rgba(184,146,63,.4)}
+.gc>*{opacity:0;transform:translateY(10px);animation:gin .8s ease forwards}
+.gc>*:nth-child(1){animation-delay:.1s}.gc>*:nth-child(2){animation-delay:.25s}.gc>*:nth-child(3){animation-delay:.45s}.gc>*:nth-child(4){animation-delay:.6s}.gc>*:nth-child(5){animation-delay:.75s}.gc>*:nth-child(6){animation-delay:.9s}.gc>*:nth-child(7){animation-delay:1.05s}.gc>*:nth-child(8){animation-delay:1.2s}.gc>*:nth-child(9){animation-delay:1.4s}.gc>*:nth-child(10){animation-delay:1.6s}
+@keyframes gin{to{opacity:1;transform:none}}
+</style>
 </head>
 <body>
 <div id="app"></div><div id="bill"></div>
@@ -447,7 +515,7 @@ async function pull(force){if(!sb)return;try{
   if(r.data){const keep={},old=SNAP;Object.keys(DIRTY).forEach(id=>{if(Date.now()-DIRTY[id]<15000){const l=ORD.find(x=>x.id===id);if(l)keep[id]=l}else delete DIRTY[id]});
     const prevOld=SESSION?ORD.filter(o=>o.created<Date.now()-WIN):[];ORD=r.data.map(x=>x.data).map(o=>keep[o.id]||o);prevOld.forEach(o=>{if(!ORD.some(z=>z.id===o.id))ORD.push(o)});Object.keys(keep).forEach(id=>{if(!ORD.some(o=>o.id===id))ORD.push(keep[id])});
     SNAP={};ORD.forEach(o=>SNAP[o.id]=keep[o.id]&&old[o.id]?old[o.id]:JSON.stringify(o))}
-if(SESSION){const c=await sb.from('calls').select('id,tbl,created').eq('done',false).order('created');if(c.data)CALLS=c.data;const w=await sb.from('waiters').select('*').order('created');if(w.data)WL=w.data;autoClean()}else{try{save('rd_my',load('rd_my',[]).filter(x=>!x.d||x.d>=startOfDay()))}catch(e){}if(MYMOB&&Date.now()-CARDAT>20000)await loadCard()}
+if(SESSION){const c=await sb.from('calls').select('id,tbl,created,kind').eq('done',false).order('created');if(c.data)CALLS=c.data;const w=await sb.from('waiters').select('*').order('created');if(w.data)WL=w.data;autoClean()}else{try{save('rd_my',load('rd_my',[]).filter(x=>!x.d||x.d>=startOfDay()))}catch(e){}if(MYMOB&&Date.now()-CARDAT>20000)await loadCard()}
 }catch(e){console.error(e)}}
 const usagePct=()=>USAGE?Math.round(USAGE.bytes/(500*1024*1024)*100):0;
 async function loadUsage(){if(!sb||!SESSION)return;try{const r=await sb.rpc('db_usage');if(r.data){const o=usagePct();USAGE=r.data;if(usagePct()!==o)render()}}catch(e){}}
@@ -513,7 +581,7 @@ function chime(){try{unlockAudio();const t0=AC.currentTime+.05;[783.99,1046.5,13
 MYMOB=load('rd_mob','');let custName=load('rd_cn',''),custMob=MYMOB,billPop=null,AUTOP=load('rd_autop',false),PS=null,PQ=[],PB=false;
 let WEL=(()=>{try{return !sessionStorage.getItem('rd_wel')}catch(e){return true}})(),readyPop=null,lastCall=0,WPH=load('rd_wph',''),WF=null,WSEEN=null,WRING=0,CALLS=[],WL=[],CSEEN=null,LASTRING=0,RINGS=0,lastCalls='';
 let WIN=129600000,LSIG='',MENUAT=0,USAGE=null,USAT=0,HDT=0,TICK=0,CARD=null,CARDAT=0,SCR=false,revFor=null,revStars=0,REVT='',CUS=[],REV=[],ADT=0,WQ=-1,OFFT='🎉 राज ढाबा में नया ऑफर!\n(यहाँ अपना ऑफर लिखें)\n\nआपका स्वागत है 🙏 – राज ढाबा, '+CFG.phone;
-let payMode='cash',upiPop=false,CTX={};
+let svcOpen=false,lastSvc={},payMode=null,WTIMER=0,GOPEN=false,PENDSND=false,upiPop=false,CTX={};
 let cart=load('rd_cart',[]);
 let noteText='';
 let vegOnly=false;
@@ -524,6 +592,8 @@ const lineTotals=()=>{const sub=cart.reduce((a,c)=>{const it=itemOf(c.id);return
 function cartAdd(id,pt,q){const l=cart.find(c=>c.id===id&&c.pt===pt);if(l)l.qty+=q;else cart.push({id,pt,qty:q});save('rd_cart',cart)}
 
 /* ---------------- ग्राहक: पेज ---------------- */
+const SV={waiter:['🛎️','वेटर बुलाएँ','Call waiter'],bill:['🧾','बिल लाएँ','Bring the bill'],water:['💧','पानी चाहिए','Water please'],clean:['🧹','टेबल साफ़ करें','Clean the table']};
+function svcModal(){const hi=lang==='hi';return `<div class="upimask"><div class="upibox"><div style="font-size:22px;font-weight:800;font-family:var(--serif)">${hi?'हम आपकी सेवा में हैं':'How may we serve you?'}</div><div class="upisub">${t('tbl')} ${pad(TABLE)}</div>${Object.keys(SV).map(k=>`<button class="svcbtn" data-act="svc" data-k="${k}"><span>${SV[k][0]}</span>${SV[k][hi?1:2]}</button>`).join('')}<button class="upix" data-act="svcclose">${hi?'बंद करें':'Close'}</button></div></div>`}
 const revDone=id=>load('rd_rev',[]).includes(id);
 function reviewModal(){const o=getOrder(revFor);if(!o)return'';const hi=lang==='hi';
   return `<div class="upimask"><div class="upibox"><div style="font-size:22px;font-weight:800">${hi?'आपका अनुभव कैसा रहा?':'How was your experience?'}</div><div class="rstars">${[1,2,3,4,5].map(n=>`<button class="${n<=revStars?'on':''}" data-act="revstar" data-n="${n}">★</button>`).join('')}</div><textarea id="rvt" class="note" placeholder="${hi?'अपनी राय लिखें (वैकल्पिक)':'Write a comment (optional)'}">${esc(REVT)}</textarea><button class="upibtn" style="font-size:18px;padding:14px" data-act="revsend">${hi?'रिव्यू भेजें':'Submit'}</button><button class="upix" data-act="revclose">${hi?'बाद में':'Later'}</button></div></div>`}
@@ -545,10 +615,19 @@ function aCust(){const n=CUS.length,cur=WQ>=0&&CUS[WQ]?CUS[WQ]:null,wa=m=>`https
   const queue=cur?`<div class="dcard" style="border:2px solid #25D366"><h3>💬 ${WQ+1} / ${n}</h3><div style="font-size:20px;font-weight:800">${esc(cur.name||'ग्राहक')} · ${cur.mobile}</div><div class="row2" style="margin-top:10px"><a class="btn btn-success" href="${wa(cur.mobile)}" target="_blank" rel="noopener">WhatsApp खोलें</a><button class="btn btn-primary" data-act="wnext">अगला →</button></div><button class="smallbtn" style="margin-top:8px" data-act="wstop">रोकें</button></div>`:'';
   return `<div class="dcard" style="margin-top:0"><h3>📣 ऑफर संदेश</h3><textarea id="offt" class="note" style="min-height:110px">${esc(OFFT)}</textarea><div class="row2" style="margin-top:8px"><button class="btn btn-success" data-act="wqstart">💬 WhatsApp से भेजें</button><button class="btn btn-secondary" data-act="copynums">📋 नंबर कॉपी</button><button class="btn btn-secondary" data-act="csv">⬇ CSV</button></div><small>WhatsApp हर ग्राहक के लिए एक-एक करके खुलेगा; "अगला →" दबाते जाएँ।</small></div>${queue}
   <div class="dcard"><h3>👥 कुल ग्राहक: ${n}</h3>${n?`<div style="overflow-x:auto"><table class="ctb"><tr><th>नाम</th><th>मोबाइल</th><th>विज़िट</th><th>स्टाम्प</th><th>आख़िरी</th><th></th></tr>${CUS.map(c=>`<tr><td>${esc(c.name||'')}</td><td>${c.mobile}</td><td>${c.visits||0}</td><td>${c.stamps||0}/7</td><td>${c.last_visit?new Date(c.last_visit).toLocaleDateString('en-IN'):'–'}</td><td><a href="${wa(c.mobile)}" target="_blank" rel="noopener">💬</a> <a href="sms:+91${c.mobile}?body=${encodeURIComponent(OFFT)}">✉</a></td></tr>`).join('')}</table></div>`:'अभी कोई ग्राहक नहीं'}</div>`}
+function softWelcome(){try{unlockAudio();if(AC.state!=='running'){PENDSND=true;AC.resume().then(()=>{if(PENDSND&&AC.state==='running'){PENDSND=false;softWelcome()}}).catch(()=>{});return}const t0=AC.currentTime+.05;[783.99,987.77,1174.66,1567.98].forEach((f,i)=>bell(t0+i*.2,f,.22));if(navigator.vibrate)navigator.vibrate(60)}catch(e){}}
+function openGate(){if(GOPEN||!WEL)return;GOPEN=true;const g=document.getElementById('gate4');if(g)g.classList.add('open');softWelcome();setTimeout(()=>{WEL=false;GOPEN=false;WTIMER=0;try{sessionStorage.setItem('rd_wel','1')}catch(x){}render()},1050)}
+function gateHTML(){const hi=lang==='hi',ph=String(CFG.phone).replace(/\D/g,'').slice(-10),shown='+91 '+ph.slice(0,5)+' '+ph.slice(5);
+  return `<div id="gate4" class="gate4${GOPEN?' open':''}" data-act="welcome"><div class="gq q1"></div><div class="gq q2"></div><div class="gq q3"></div><div class="gq q4"></div>
+  <div class="gc"><div class="gtop">WELCOME TO</div><div class="gglow"><img class="logoimg" src="${LOGO}" style="width:178px;margin:0" alt=""></div>
+  <h1 class="gh">RAJ DHABA</h1><div class="gdiv"><i></i><b>◆</b><i></i></div>
+  <div class="gw2">राज ढाबा · ${esc(t('tag'))}</div><div class="gnam">🙏 ${hi?'नमस्ते, आपका स्वागत है':'Namaste, you are most welcome'}</div>
+  <div class="gowner">${esc(CFG.owner[lang])}</div><a class="gcall" href="tel:+91${ph}" onclick="event.stopPropagation()">📞 ${shown}</a>
+  <div class="gtab">${t('tbl')} ${pad(TABLE)}</div><div class="gskip">${hi?'छूकर आगे बढ़ें':'Tap to continue'}</div></div></div>`}
 function welcomePage(){const hi=lang==='hi';return `<div class="welcome"><img class="logoimg" src="${LOGO}" style="width:230px" alt=""><div class="wl1">${hi?'स्वागत है':'Welcome'}</div><h1>राज ढाबा</h1><div class="wl2">Raj Dhaba · ${esc(t('tag'))}</div><div class="row" style="margin:18px 0"><span class="tpill">${t('tbl')} ${pad(TABLE)}</span>${langSw()}</div><button class="btn btn-primary btn-lg" style="min-height:62px;max-width:320px" data-act="welcome">🍽️ ${hi?'मेनू देखें':'View menu'}</button></div>`}
 function pageThanks(id){const o=getOrder(id),hi=lang==='hi';if(!o||!isMine(o))return pageNotFound();return `<div class="welcome"><div class="okbig">✓</div><div class="wl1">${hi?'धन्यवाद! 🙏':'Thank you! 🙏'}</div><h1>${hi?'भुगतान सफल':'Payment successful'}</h1><div class="wl2">${rs(o.total)} · ${esc(o.id)} · ${t('tbl')} ${pad(o.table)}</div><p style="color:#d8c9a3;margin:14px 0">${hi?'राज ढाबा में आने के लिए शुक्रिया। फिर पधारिए!':'Thank you for dining at Raj Dhaba. Visit again!'}</p><button class="btn btn-primary btn-lg" style="max-width:320px" data-act="billopen" data-id="${o.id}">🧾 ${hi?'बिल देखें':'View bill'}</button>${revDone(o.id)?'':`<button class="btn btn-secondary" style="max-width:320px;margin-top:10px;background:transparent;color:#f1d58a;border-color:#C6A15B" data-act="revopen" data-id="${o.id}">⭐ ${hi?'रिव्यू दें':'Leave a review'}</button>`}<button class="btn btn-secondary" style="max-width:320px;margin-top:10px;background:transparent;color:#f1d58a;border-color:#C6A15B" data-act="go" data-to="#/">🏠 ${hi?'होम':'Home'}</button></div>`}
 function readyModal(){const o=getOrder(readyPop);if(!o)return'';const hi=lang==='hi';return `<div class="upimask"><div class="upibox"><div style="font-size:54px">🍽️</div><div class="upiamt" style="font-size:26px">${hi?'आपका खाना तैयार है!':'Your food is ready!'}</div><div class="upisub">${esc(o.id)} · ${t('tbl')} ${pad(o.table)}</div><button class="upibtn" style="font-size:18px;padding:14px" data-act="readyclose">${hi?'ठीक है':'OK'}</button></div></div>`}
-function callsBar(){return CALLS.map(c=>`<div class="callbar">🛎️ ${t('tbl')} ${pad(c.tbl)} ${lang==='hi'?'वेटर बुला रहा है':'is calling the waiter'}<button class="smallbtn" data-act="calldone" data-id="${c.id}">${lang==='hi'?'देख लिया':'Done'}</button></div>`).join('')}
+function callsBar(){return CALLS.map(c=>`<div class="callbar">${SV[c.kind||'waiter'][0]} ${t('tbl')} ${pad(c.tbl)} – ${SV[c.kind||'waiter'][lang==='hi'?1:2]}<button class="smallbtn" data-act="calldone" data-id="${c.id}">${lang==='hi'?'देख लिया':'Done'}</button></div>`).join('')}
 function callCheck(){const ids=CALLS.map(c=>c.id);if(CSEEN===null)CSEEN=new Set(ids);else{const f=ids.filter(i=>!CSEEN.has(i));ids.forEach(i=>CSEEN.add(i));if(f.length)RINGS=0}
   if(ids.length&&soundOn&&RINGS<20&&Date.now()-LASTRING>9000){callRing();LASTRING=Date.now();RINGS++}}
 async function wpull(){if(!sb||!WPH)return;try{const r=await sb.rpc('waiter_feed',{p:WPH});if(!r.data)return;WF=r.data;
@@ -562,7 +641,7 @@ function pageWaiter(){const hi=lang==='hi',inp='style="width:100%;padding:13px;b
   const f=WF||{calls:[],ready:[]};
   return `<section class="hero" style="padding:16px"><h1>🛎️ ${esc(f.name||'')}</h1><div class="tag">${hi?'यह पेज खुला रखें – बुलावे पर तेज़ घंटी बजेगी':'Keep this page open – a loud ring plays on calls'}</div></section><div class="wrap">
   <button class="btn btn-secondary" data-act="wtest">🔊 ${hi?'आवाज़ चालू करें / जाँचें':'Enable / test sound'}</button>
-  <h3 style="margin:16px 0 8px">🛎️ ${hi?'बुलावे':'Calls'}</h3>${(f.calls||[]).length?f.calls.map(c=>`<div class="wcard"><b>${t('tbl')} ${pad(c.tbl)}</b><span>${clock(c.created)}</span><button class="btn btn-primary" data-act="wdone" data-id="${c.id}">${hi?'देख लिया':'Done'}</button></div>`).join(''):`<div class="empty">${hi?'कोई बुलावा नहीं':'No calls'}</div>`}
+  <h3 style="margin:16px 0 8px">🛎️ ${hi?'बुलावे':'Calls'}</h3>${(f.calls||[]).length?f.calls.map(c=>`<div class="wcard"><b>${SV[c.kind||'waiter'][0]} ${t('tbl')} ${pad(c.tbl)}</b><span>${SV[c.kind||'waiter'][lang==='hi'?1:2]} · ${clock(c.created)}</span><button class="btn btn-primary" data-act="wdone" data-id="${c.id}">${hi?'देख लिया':'Done'}</button></div>`).join(''):`<div class="empty">${hi?'कोई बुलावा नहीं':'No calls'}</div>`}
   <h3 style="margin:16px 0 8px">🍽️ ${hi?'तैयार खाना – टेबल पर ले जाएँ':'Ready to serve'}</h3>${(f.ready||[]).length?f.ready.map(o=>`<div class="wcard"><b>${t('tbl')} ${pad(o.table)}</b><span>${esc(o.id)}</span></div>`).join(''):`<div class="empty">${hi?'अभी कुछ नहीं':'Nothing yet'}</div>`}
   <button class="smallbtn" style="margin-top:16px" data-act="wout">${hi?'बाहर निकलें':'Log out'}</button></div>`}
 function aStaff(){const link=location.origin+location.pathname+'#/waiter';
@@ -628,16 +707,17 @@ function pageCart(){
    <div class="panel"><div class="trow"><span>${t('sub')}</span><span>${rs(tt.sub)}</span></div>${tt.disc?`<div class="trow" style="color:#1f8f4e"><span>🎁 ${lang==='hi'?'ऑफर':'Offer'} (${activeReward().pct}%)</span><span>−${rs(tt.disc)}</span></div>`:''}
     ${CFG.taxPercent>0?`<div class="trow"><span>${t('tax')} (${CFG.taxPercent}%)</span><span>${rs(tt.tax)}</span></div>`:''}
     <div class="trow big"><span>${t('total')}</span><span>${rs(tt.total)}</span></div></div>
-   <label class="lb" for="note">${t('note')}</label><textarea id="note" class="note" placeholder="${esc(t('noteph'))}">${esc(noteText)}</textarea>
+   <label class="lb" for="note">${t('note')}</label><div class="nchips">${(lang==='hi'?['कम तीखा','ज़्यादा तीखा','बिना प्याज़-लहसुन','कम नमक','जल्दी चाहिए']:['Less spicy','Extra spicy','No onion-garlic','Less salt','In a hurry']).map(v=>`<button data-act="nchip" data-v="${v}">${v}</button>`).join('')}</div><textarea id="note" class="note" placeholder="${esc(t('noteph'))}">${esc(noteText)}</textarea>
    <div class="panel"><b>${lang==='hi'?'आपकी जानकारी':'Your details'}</b>
      <input id="cname" value="${esc(custName)}" placeholder="${lang==='hi'?'आपका नाम':'Your name'}" autocomplete="name" style="width:100%;padding:13px;border:1px solid var(--gold);border-radius:10px;font-size:16px;margin:8px 0">
      <input id="cmob" type="tel" inputmode="numeric" maxlength="10" value="${esc(custMob)}" placeholder="${lang==='hi'?'मोबाइल नंबर (10 अंक)':'Mobile number (10 digits)'}" autocomplete="tel" style="width:100%;padding:13px;border:1px solid var(--gold);border-radius:10px;font-size:16px">
      <small style="display:block;margin-top:6px;color:var(--gray)">${lang==='hi'?'इसी नंबर से आप अपने ऑर्डर और बिल देख पाएँगे।':'Use this number to see your orders and bills.'}</small></div>
-   <div class="notice" style="background:#fff"><b>${lang==='hi'?'भुगतान कैसे करेंगे?':'How will you pay?'}</b><div class="seg" style="margin-top:8px"><button class="${payMode==='cash'?'on':''}" data-act="paym" data-m="cash">💵 ${lang==='hi'?'कैश':'Cash'}</button><button class="${payMode==='upi'?'on':''}" data-act="paym" data-m="upi">📱 UPI</button></div><small style="display:block;margin-top:8px;color:var(--gray)">${payMode==='upi'?(lang==='hi'?'ऑर्डर के बाद UPI से भुगतान का बटन खुलेगा।':'A UPI pay button opens after you order.'):(lang==='hi'?'भुगतान काउंटर पर कैश से होगा।':'Pay cash at the counter.')}</small></div>
+   <div class="notice" style="background:#fff"><b>${lang==='hi'?'भुगतान कैसे करेंगे?':'How will you pay?'}</b><div class="seg" style="margin-top:8px"><button class="${payMode==='cash'?'on':''}" data-act="paym" data-m="cash">💵 ${lang==='hi'?'कैश':'Cash'}</button><button class="${payMode==='upi'?'on':''}" data-act="paym" data-m="upi">📱 ${lang==='hi'?'ऑनलाइन (UPI)':'Online (UPI)'}</button></div><small style="display:block;margin-top:8px;color:var(--gray)">${payMode==='upi'?(lang==='hi'?'ऑर्डर के बाद UPI से भुगतान का बटन खुलेगा।':'A UPI pay button opens after you order.'):payMode==='cash'?(lang==='hi'?'भुगतान काउंटर पर कैश से होगा।':'Pay cash at the counter.'):'<b class="payhint">'+(lang==='hi'?'👆 पहले कैश या ऑनलाइन चुनें, फिर ऑर्डर भेजें':'👆 Choose Cash or Online first')+'</b>'}</small></div>
    <div class="stack"><button class="btn btn-primary btn-lg" data-act="place">${t('place')} · ${rs(tt.total)}</button><button class="btn btn-secondary btn-md" data-act="go" data-to="#/menu">+ ${t('menu')}</button></div><div class="spacer"></div></div>`;
 }
 async function placeOrder(){
   if(!cart.length)return;
+  if(!payMode){toast(lang==='hi'?'पहले भुगतान का तरीका चुनें – कैश या ऑनलाइन':'Choose a payment method – Cash or Online');const pb0=document.querySelector('[data-act="place"]');if(pb0)pb0.disabled=false;const hn=document.querySelector('.payhint');if(hn&&hn.scrollIntoView)hn.scrollIntoView({block:'center'});return}
   const mob=custMob.replace(/\D/g,'').slice(-10);
   if(!custName.trim()||mob.length!==10){toast(lang==='hi'?'नाम और 10 अंकों का मोबाइल नंबर डालें':'Enter your name and 10-digit mobile number');const pb=document.querySelector('[data-act="place"]');if(pb)pb.disabled=false;return}
   MYMOB=mob;save('rd_mob',mob);save('rd_cn',custName.trim());
@@ -647,7 +727,7 @@ async function placeOrder(){
   const tl0=lineTotals(),sub=tl0.sub,tax=tl0.tax,disc=tl0.disc,rwd=disc?activeReward():null;
   const no=await nextNo();
   const o={id:CFG.prefix+no,token:rnd(),table:TABLE,name:custName.trim(),mobile:mob,items,note:noteText.trim(),sub,tax,disc,rewardCode:rwd?rwd.code:null,total:tl0.total,status:'NEW',pay:payMode,created:Date.now(),updated:Date.now(),paid:false};
-  if(payMode==='upi')upiPop=true;
+  if(payMode==='upi')upiPop=true;payMode=null;
   const all=getOrders();all.push(o);setOrders(all);
   const my=load('rd_my',[]);my.push({id:o.id,token:o.token,d:Date.now()});if(sb)sb.rpc('register_customer',{p_mobile:mob,p_name:custName.trim()});save('rd_my',my);
   cart=[];save('rd_cart',cart);noteText='';
@@ -733,7 +813,7 @@ async function doLogin(){const e=document.getElementById('pinerr'),hi=lang==='hi
   e.textContent='...';
   const r=await sb.auth.signInWithPassword({email:(await sb.rpc('staff_email',{p:ph})).data||'x@invalid.local',password:pw});
   if(r.error){e.textContent=hi?'नंबर या पासवर्ड गलत है':'Wrong number or password';return}
-  SESSION=r.data.session;await pull();render()}
+  SESSION=r.data.session;LSIG='';await pull(true);render()}
 let soundOn=true;let seen=null;
 function staffHead(title,extra){return `<div class="shead"><h1>${esc(title)}</h1>${extra||''}<button class="smallbtn ${AUTOP?'on':''}" data-act="autop">🖨 Auto-print ${AUTOP?'ON':'OFF'}</button>${langSw()}<button class="smallbtn" data-act="logout">${t('logout')}</button></div><div class="demo">${t('demo')}</div>`}
 function itemsText(o){return o.items.map(i=>`<li><b>${i.qty}×</b><span>${esc(lang==='hi'?i.hi:i.en)}${i.pt==='p'?'':' ('+ptLabel(i.pt)+')'}</span></li>`).join('')}
@@ -863,9 +943,10 @@ function render(){
   document.body.className=staff?'staff':'cust';
   document.documentElement.lang=lang==='hi'?'hi':'en';
   let html;
+  if(WEL&&r!=='home')WEL=false;
   if(staff&&RECOVERY)html=recoveryPage();
   else if(staff&&!isStaff())html=gate();
-  else if(WEL&&r==='home')html=welcomePage();
+  else if(WEL&&r==='home')html=pageHome()+gateHTML();
   else switch(r){
     case 'menu':html=pageMenu();break;
     case 'cart':html=pageCart();break;
@@ -882,12 +963,14 @@ function render(){
   if(!staff&&billPop){const bo=getOrder(billPop);if(bo)html+=billModal(bo)}
   if(!staff&&readyPop)html+=readyModal();
   if(!staff&&revFor)html+=reviewModal();
+  if(!staff&&svcOpen)html+=svcModal();
   if(!staff&&!WEL&&r!=='waiter'&&r!=='thanks')html+='<button class="fabw" data-act="callw">🛎️<span>'+(lang==='hi'?'वेटर बुलाएँ':'Call waiter')+'</span></button>';
   if(staff&&isStaff()&&CALLS.length)html=callsBar()+html;
   if(staff&&isStaff()&&usagePct()>=90)html=usageBar()+html;
   document.getElementById('app').innerHTML=html;
   if(h!==lastHash){window.scrollTo(0,0);lastHash=h;if(staff)seen=null}
   if(staff&&isStaff())checkAlerts();
+  if(WEL&&r==='home'&&!staff&&!WTIMER)WTIMER=setTimeout(openGate,4300);
   if(staff&&isStaff()){autoClean();if(Date.now()-USAT>600000){USAT=Date.now();loadUsage()}}
   if(r==='admin'&&p[1]==='reports'&&rscope!=='today'&&Date.now()-HDT>120000)loadHistory().then(render);
   if(r==='admin'&&isStaff()&&(p[1]==='cust'||p[1]==='rev')&&Date.now()-ADT>15000){ADT=Date.now();loadAdminData()}
@@ -950,11 +1033,14 @@ document.addEventListener('click',e=>{unlockAudio();
       doPrint(`<div class="bl"><img src="${LOGO}" alt=""><h2>राज ढाबा – बिक्री रिपोर्ट</h2><div class="bm">${new Date().toLocaleString('en-IN')}</div><hr><table>${ks.map(k=>`<tr><td>${k}<br><small>${m[k].n} ऑर्डर · Cash ${rs(m[k].c)} · UPI ${rs(m[k].u)}</small></td><td style="text-align:right">${rs(m[k].t)}</td></tr>`).join('')}</table><hr><div class="br big"><span>कुल (${N})</span><span>${rs(T)}</span></div></div>`)});break;
     case 'purge':{const d=Number(document.getElementById('pd').value);if(!confirm('क्या आपने बैकअप (CSV) डाउनलोड कर लिया? '+(d===1?'आज को छोड़कर सारे':d+' दिन से पुराने')+' ऑर्डर हमेशा के लिए हट जाएँगे।'))break;
       const cut=d===1?startOfDay():Date.now()-d*86400000;sb.from('orders').delete().lt('created',cut).select('id').then(r=>{if(r.error){toast('⚠ '+r.error.message);return}toast('🧹 '+(r.data||[]).length+' ऑर्डर हटाए');ORD=ORD.filter(o=>o.created>=cut);LSIG='';USAT=0;render()});break}
-    case 'welcome':WEL=false;try{sessionStorage.setItem('rd_wel','1')}catch(x){}unlockAudio();render();break;
+    case 'welcome':openGate();break;
     case 'readyclose':readyPop=null;render();break;
-    case 'callw':{if(Date.now()-lastCall<20000){toast(lang==='hi'?'वेटर को सूचना जा चुकी है, कृपया प्रतीक्षा करें':'Waiter already notified, please wait');break}
-      if(!sb){toast('Supabase?');break}lastCall=Date.now();
-      sb.from('calls').insert({tbl:TABLE,created:Date.now()}).then(r=>{if(r.error){lastCall=0;toast('⚠ '+r.error.message)}else toast(lang==='hi'?'🛎️ वेटर को सूचना भेज दी गई':'🛎️ Waiter notified')});break}
+    case 'callw':svcOpen=true;render();break;
+    case 'svcclose':svcOpen=false;render();break;
+    case 'svc':{const k=b.dataset.k;if(!SV[k])break;if(Date.now()-(lastSvc[k]||0)<20000){toast(lang==='hi'?'सूचना जा चुकी है, कृपया प्रतीक्षा करें':'Already notified, please wait');break}
+      if(!sb){toast('Supabase?');break}lastSvc[k]=Date.now();svcOpen=false;render();
+      sb.from('calls').insert({tbl:TABLE,created:Date.now(),kind:k}).then(r=>{if(r.error){lastSvc[k]=0;toast('⚠ '+r.error.message)}else toast(SV[k][0]+' '+(lang==='hi'?'सूचना भेज दी गई':'Request sent'))});break}
+    case 'nchip':{const v=b.dataset.v;if(!noteText.includes(v))noteText=(noteText?noteText+', ':'')+v;render();break}
     case 'calldone':{const cid=Number(id);CALLS=CALLS.filter(c=>c.id!==cid);if(sb)sb.from('calls').update({done:true}).eq('id',cid).then(r=>{if(r.error)toast('⚠ '+r.error.message)});render();break}
     case 'addw':{const g=x=>document.getElementById(x).value.trim(),ph=g('wm').replace(/\D/g,'').slice(-10);if(!g('wn')||ph.length!==10){toast('नाम और 10 अंकों का मोबाइल डालें');break}
       sb.from('waiters').upsert({phone:ph,name:g('wn'),role:g('wr'),created:Date.now()}).then(r=>{if(r.error)toast('⚠ '+r.error.message);else{toast('✓ रजिस्टर हो गया');pull(true).then(render)}});break}
@@ -967,7 +1053,7 @@ document.addEventListener('click',e=>{unlockAudio();
     case 'login':doLogin();break;
     case 'forgot':doForgot();break;
     case 'setpw':doSetPw();break;
-    case 'logout':if(sb)sb.auth.signOut();SESSION=null;ORD=[];render();pull().then(render);break;
+    case 'logout':if(sb)sb.auth.signOut();SESSION=null;ORD=[];LSIG='';render();pull().then(render);break;
     case 'sound':soundOn=!soundOn;if(soundOn)beep();render();break;
     case 'ktab':ktab=b.dataset.s;render();break;
     case 'addItem':{const g=x=>document.getElementById(x).value.trim();const n=g('nn'),h=parseInt(g('nh'),10),f=parseInt(g('nf'),10);
