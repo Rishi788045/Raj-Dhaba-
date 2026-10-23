@@ -459,6 +459,15 @@ button .ic:only-child,.fabw .ic{margin-right:0}
 .gfoot .lang{transform:scale(.88)}
 .ginfo .gowner{font-size:14px!important}
 </style>
+<style>
+.cmp{margin:18px auto;padding:14px;border:1px solid #E0E0E0;border-radius:8px;background:#fff;text-align:left;box-shadow:0 1px 3px rgba(0,0,0,.10);color:#212121;max-width:420px;width:100%}
+.cmp-h{font-weight:700;font-size:17px}.cmp-t{font-size:13px;color:#757575;margin:2px 0 10px}
+.cmp-b{display:flex;gap:10px;flex-wrap:wrap}
+.cmpbtn{flex:1 1 150px;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:6px;text-decoration:none;color:#212121!important;border:1px solid #BDBDBD;background:#fff;font-weight:700;min-height:54px}
+.cmpbtn small{display:block;font-weight:400;font-size:12px;color:#757575}
+.cmpbtn>svg{width:28px;height:28px;flex:none;margin:0!important}
+.cmpbtn.wa{border-color:#25D366}
+</style>
 </head>
 <body>
 <div id="app"></div><div id="bill"></div>
@@ -480,6 +489,7 @@ const CFG={
   tables:10,
   taxPercent:0,          // GST लगानी हो तो यहाँ % लिखें (जैसे 5). 0 = बिल में टैक्स की लाइन नहीं दिखेगी
   phone:'9559502506',
+  complaint:{whatsapp:'7880452969',phone:'7880452969'},   // Complaint block: WhatsApp and call numbers
   owner:{hi:'प्रो. बबलू यादव',en:'Prop. Bablu Yadav'},
   sbUrl:'https://lbtkmxfsxdmblyqkoqea.supabase.co',        // Supabase > Project Settings > API > Project URL
   sbKey:'sb_publishable_OrB4BZFfvoIA1FN1bTe2JQ_na-v9HP8',
@@ -745,7 +755,7 @@ function gateHTML(){const hi=lang==='hi',ph=String(CFG.phone).replace(/\D/g,'').
   <div class="ginfo"><span class="gowner">${esc(CFG.owner[lang])}</span><a class="gcall" href="tel:+91${ph}" onclick="event.stopPropagation()">${shown}</a></div>
   <div class="gfoot"><span class="gtab">${t('tbl')} ${pad(TABLE)}</span>${langSw()}</div></div></div></div>`}
 function welcomePage(){const hi=lang==='hi';return `<div class="welcome"><img class="logoimg" src="${LOGO}" style="width:230px" alt=""><div class="wl1">${hi?'स्वागत है':'Welcome'}</div><h1>${brand()}</h1><div class="wl2">${esc(t('tag'))}</div><div class="row" style="margin:18px 0"><span class="tpill">${t('tbl')} ${pad(TABLE)}</span>${langSw()}</div><button class="btn btn-primary btn-lg" style="min-height:62px;max-width:320px" data-act="welcome">🍽️ ${hi?'मेनू देखें':'View menu'}</button></div>`}
-function pageThanks(id){const o=getOrder(id),hi=lang==='hi';if(!o||!isMine(o))return pageNotFound();return `<div class="welcome"><div class="okbig">✓</div><div class="wl1">${hi?'धन्यवाद! 🙏':'Thank you! 🙏'}</div><h1>${hi?'भुगतान सफल':'Payment successful'}</h1><div class="wl2">${rs(o.total)} · ${esc(o.id)} · ${t('tbl')} ${pad(o.table)}</div><p style="color:#d8c9a3;margin:14px 0">${hi?'आने के लिए शुक्रिया, '+brand()+'। फिर पधारिए!':'Thank you for dining at '+brand()+'. Visit again!'}</p><button class="btn btn-primary btn-lg" style="max-width:320px" data-act="billopen" data-id="${o.id}">🧾 ${hi?'बिल देखें':'View bill'}</button>${revDone(o.id)?revChip(o.id):`<button class="btn btn-secondary" style="max-width:320px;margin-top:10px" data-act="revopen" data-id="${o.id}">⭐ ${hi?'रिव्यू दें':'Leave a review'}</button>`}<button class="btn btn-secondary" style="max-width:320px;margin-top:10px;background:transparent;color:#f1d58a;border-color:#C6A15B" data-act="go" data-to="#/">🏠 ${hi?'होम':'Home'}</button></div>`}
+function pageThanks(id){const o=getOrder(id),hi=lang==='hi';if(!o||!isMine(o))return pageNotFound();return `<div class="welcome"><div class="okbig">✓</div><div class="wl1">${hi?'धन्यवाद! 🙏':'Thank you! 🙏'}</div><h1>${hi?'भुगतान सफल':'Payment successful'}</h1><div class="wl2">${rs(o.total)} · ${esc(o.id)} · ${t('tbl')} ${pad(o.table)}</div><p style="color:#d8c9a3;margin:14px 0">${hi?'आने के लिए शुक्रिया, '+brand()+'। फिर पधारिए!':'Thank you for dining at '+brand()+'. Visit again!'}</p><button class="btn btn-primary btn-lg" style="max-width:320px" data-act="billopen" data-id="${o.id}">🧾 ${hi?'बिल देखें':'View bill'}</button>${revDone(o.id)?revChip(o.id):`<button class="btn btn-secondary" style="max-width:320px;margin-top:10px" data-act="revopen" data-id="${o.id}">⭐ ${hi?'रिव्यू दें':'Leave a review'}</button>`}<button class="btn btn-secondary" style="max-width:320px;margin-top:10px;background:transparent;color:#f1d58a;border-color:#C6A15B" data-act="go" data-to="#/">🏠 ${hi?'होम':'Home'}</button>${complaintBox(o.id)}</div>`}
 function readyModal(){const o=getOrder(readyPop);if(!o)return'';const hi=lang==='hi';return `<div class="upimask"><div class="upibox"><div style="font-size:54px">🍽️</div><div class="upiamt" style="font-size:26px">${hi?'आपका खाना तैयार है!':'Your food is ready!'}</div><div class="upisub">${esc(o.id)} · ${t('tbl')} ${pad(o.table)}</div><button class="upibtn" style="font-size:18px;padding:14px" data-act="readyclose">${hi?'ठीक है':'OK'}</button></div></div>`}
 function callsBar(){return CALLS.map(c=>`<div class="callbar">${SV[c.kind||'waiter'][0]} ${t('tbl')} ${pad(c.tbl)} – ${SV[c.kind||'waiter'][lang==='hi'?1:2]}<button class="smallbtn" data-act="calldone" data-id="${c.id}">${lang==='hi'?'देख लिया':'Done'}</button></div>`).join('')}
 function callCheck(){const ids=CALLS.map(c=>c.id);if(CSEEN===null)CSEEN=new Set(ids);else{const f=ids.filter(i=>!CSEEN.has(i));ids.forEach(i=>CSEEN.add(i));if(f.length)RINGS=0}
@@ -771,14 +781,21 @@ function langSw(){return `<div class="lang"><button class="${lang==='hi'?'on':''
 function topbar(title,back){return `<header class="top"><div class="wrap">${back?`<button class="iconbtn" data-act="go" data-to="${back}" aria-label="${esc(t('back'))}">←</button>`:''}<h1>${esc(title)}</h1><span class="tpill">${t('tbl')} ${pad(TABLE)}</span>${langSw()}</div></header>`}
 function bi(k){return esc(tx(k,lang))}
 
+const waIcon=()=>'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#25D366" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/><path fill="#fff" d="M16.6 14.4c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.8.9-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4a.8.8 0 0 0-.6.3 2.4 2.4 0 0 0-.8 1.8 4.2 4.2 0 0 0 .9 2.2 9.6 9.6 0 0 0 3.7 3.3c1.4.6 1.9.6 2.6.5a2.2 2.2 0 0 0 1.5-1.1 1.8 1.8 0 0 0 .1-1.1c-.1-.1-.2-.1-.4-.2z"/></svg>';
+function complaintBox(oid){const c=CFG.complaint,hi=lang==='hi',w=String(c.whatsapp).replace(/\D/g,'').slice(-10),p=String(c.phone).replace(/\D/g,'').slice(-10),
+  msg=(hi?'नमस्ते, मुझे शिकायत दर्ज करनी है। ':'Hello, I would like to register a complaint. ')+t('tbl')+' '+pad(TABLE)+(oid?' · '+oid:'');
+  return `<div class="cmp"><div class="cmp-h">${hi?'शिकायत':'Complaint'}</div><div class="cmp-t">${hi?'कोई परेशानी हो तो हमें सीधे बताइए।':'Tell us directly if anything is not right.'}</div>
+  <div class="cmp-b"><a class="cmpbtn wa" href="https://wa.me/91${w}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${waIcon()}<span>WhatsApp<small>+91 ${w}</small></span></a>
+  <a class="cmpbtn ph" href="tel:+91${p}">${icon('call')}<span>${hi?'संपर्क':'Contact'}<small>+91 ${p}</small></span></a></div></div>`}
 function pageHome(){
-  return `<section class="hero"><img class="logoimg" src="${LOGO}" alt="Raj"><h1>${esc(t('name'))}</h1><div class="tag">${esc(t('tag'))}</div><div class="divider"></div>
+  return `<section class="hero"><img class="logoimg" src="${LOGO}" alt="${esc(CFG.name.en)}"><h1>${esc(t('name'))}</h1><div class="tag">${esc(t('tag'))}</div><div class="divider"></div>
    <div class="row"><span class="tpill">${t('tbl')} ${pad(TABLE)}</span>${langSw()}</div></section>
    <div class="home-actions">
     <button class="btn btn-primary btn-lg" style="min-height:64px" data-act="go" data-to="#/menu">🛒 ${bi('newo')}</button>
     <button class="btn btn-secondary" data-act="go" data-to="#/orders">📋 ${bi('prev')}</button>
      <button class="btn btn-secondary" data-act="go" data-to="#/card">🎟️ ${lang==='hi'?'मेरा स्टाम्प कार्ड':'My stamp card'}</button>
     <div class="steps3"><div><b>1</b>${t('s1')}</div><div><b>2</b>${t('s2')}</div><div><b>3</b>${t('s3')}</div></div>
+    ${complaintBox()}
    </div>
    <div class="foot">${esc(CFG.owner[lang])} · <a href="tel:${CFG.phone}">📞 ${CFG.phone}</a></div>`;
 }
@@ -893,7 +910,7 @@ function pageTrack(id){
 function lookupBox(){const hi=lang==='hi';return `<div class="panel" style="margin-top:14px"><b>📱 ${hi?'मोबाइल नंबर से अपने ऑर्डर देखें':'See your orders by mobile number'}</b><input id="lm" type="tel" inputmode="numeric" maxlength="10" value="${esc(MYMOB)}" placeholder="${hi?'10 अंकों का मोबाइल नंबर':'10-digit mobile number'}" style="width:100%;padding:13px;border:1px solid var(--gold);border-radius:10px;font-size:16px;margin:8px 0"><button class="btn btn-primary btn-md" data-act="lookup">${hi?'मेरे ऑर्डर देखें':'Show my orders'}</button></div>`}
 function pageOrders(){
   const my=ORD.filter(o=>isMine(o)&&o.created>=startOfDay()).sort((a,b)=>b.created-a.created);
-  if(!my.length)return `${topbar(t('orders'),'#/')}<div class="wrap">${lookupBox()}<div class="empty"><div class="big">📋</div><h2 style="margin:10px 0 6px">${t('noOrders')}</h2><p>${t('noOrdersD')}</p><div style="margin-top:22px"><button class="btn btn-primary btn-md" data-act="go" data-to="#/menu">${t('newo')}</button></div></div></div>`;
+  if(!my.length)return `${topbar(t('orders'),'#/')}<div class="wrap">${lookupBox()}<div class="empty"><div class="big">📋</div><h2 style="margin:10px 0 6px">${t('noOrders')}</h2><p>${t('noOrdersD')}</p><div style="margin-top:22px"><button class="btn btn-primary btn-md" data-act="go" data-to="#/menu">${t('newo')}</button></div></div>${complaintBox()}</div>`;
   const due=my.filter(o=>!o.paid&&o.status!=='CANCELLED').reduce((a,o)=>a+o.total,0);
   const cards=my.map(o=>`<div class="ord"><div class="oh"><b>${esc(o.id)}</b><span class="badge ${o.status}" style="margin:0">${t('st_'+o.status)}</span></div>
    <div class="sm">${t('tbl')} ${pad(o.table)} · ${clock(o.created)}</div>
@@ -902,13 +919,13 @@ function pageOrders(){
    <button class="btn btn-secondary" data-act="go" data-to="#/track/${o.id}">${t('viewdet')}</button>${o.paid?`<button class="btn btn-primary" style="margin-top:8px" data-act="billopen" data-id="${o.id}">🧾 ${lang==='hi'?'बिल देखें':'View bill'}</button>`:''}${o.paid?(revDone(o.id)?revChip(o.id):`<button class="btn btn-secondary" style="margin-top:8px" data-act="revopen" data-id="${o.id}">⭐ ${lang==='hi'?'रिव्यू दें':'Review'}</button>`):''}${o.pay==='upi'&&!o.paid&&o.status!=='CANCELLED'?`<button class="btn btn-primary" style="margin-top:8px" data-act="upiopen" data-id="${o.id}">📱 ${lang==='hi'?'अभी भुगतान करें':'Pay now'}</button>`:''}</div>`).join('');
   return `${topbar(t('orders'),'#/')}<div class="wrap">${lookupBox()}${cards}
    <div class="panel"><div class="trow big" style="border-top:0;margin-top:0;padding-top:0"><span style="font-size:16px;font-weight:600;max-width:60%">${t('tableBill')}</span><span>${rs(due)}</span></div></div>
-   <div class="stack"><button class="btn btn-primary btn-md" data-act="go" data-to="#/menu">${t('newo')}</button></div><div class="spacer"></div></div>`;
+   <div class="stack"><button class="btn btn-primary btn-md" data-act="go" data-to="#/menu">${t('newo')}</button></div>${complaintBox()}<div class="spacer"></div></div>`;
 }
 
 /* ---------------- स्टाफ ---------------- */
 const isStaff=()=>!!SESSION;
 function gate(){const hi=lang==='hi';
-  return `<div class="gate"><img class="logoimg" src="${LOGO}" alt="Raj" style="margin-bottom:10px"><h1>${esc(t('name'))}</h1><p>${hi?'स्टाफ लॉगिन – मोबाइल नंबर और पासवर्ड':'Staff login – mobile number & password'}</p>
+  return `<div class="gate"><img class="logoimg" src="${LOGO}" alt="${esc(CFG.name.en)}" style="margin-bottom:10px"><h1>${esc(t('name'))}</h1><p>${hi?'स्टाफ लॉगिन – मोबाइल नंबर और पासवर्ड':'Staff login – mobile number & password'}</p>
    <input id="ph" type="tel" inputmode="numeric" maxlength="10" autocomplete="username" placeholder="${hi?'10 अंकों का मोबाइल नंबर':'10-digit mobile number'}" style="margin-bottom:10px">
    <input id="pw" type="password" autocomplete="current-password" placeholder="${hi?'पासवर्ड':'Password'}">
    <div id="pinerr" class="errtxt"></div><button class="btn btn-primary btn-md" data-act="login">${t('enter')}</button>
@@ -1009,7 +1026,7 @@ function aBills(){
     <div class="tscroll" style="margin-top:8px"><table class="t"><tbody>${l.map(o=>`<tr><td><b>${esc(o.id)}</b></td><td>${clock(o.created)}</td><td>${o.items.map(i=>i.qty+'× '+esc(lang==='hi'?i.hi:i.en)).join(', ')}</td><td style="text-align:right">${rs(o.total)}</td><td><button class="smallbtn" data-act="cancel" data-id="${o.id}" style="color:#e57373">✖</button></td></tr>`).join('')}</tbody></table></div>
     <div class="row2"><button class="btn btn-secondary" data-act="bill" data-ids="${l.map(o=>o.id).join(',')}">🖨️ Bill</button><button class="btn btn-success" data-act="settle" data-t="${n}">${t('markPaid')}</button></div></div>`}).join('');
 }
-function tableUrl(n){return location.origin.replace('null','')+location.pathname+'?table='+n}
+function tableUrl(n){return location.origin.replace('null','')+location.pathname+'?table='+n+'#/'}
 function aTables(){
   const cards=Array.from({length:CFG.tables},(_,i)=>i+1).map(n=>`<div class="tcard"><h3>${esc(t('name'))}</h3><small>${t('tbl')} ${pad(n)}</small><div class="qr" data-qr="${esc(tableUrl(n))}"></div><div class="lk">${esc(tableUrl(n))}</div>
    <div class="row2 noprint" style="margin-top:8px"><a class="btn btn-secondary" style="text-decoration:none;min-height:42px;font-size:15px;color:#121212" href="?table=${n}#/" target="_blank" rel="noopener">${t('open')}</a></div></div>`).join('');
@@ -1091,6 +1108,7 @@ function render(){
   document.getElementById('app').innerHTML=deemoji(html);
   if(h!==lastHash){window.scrollTo(0,0);lastHash=h;if(staff)seen=null}
   if(staff&&isStaff())checkAlerts();
+  if(WEL&&r==='home'&&!staff&&!WTIMER)WTIMER=setTimeout(openGate,5500);
   if(staff&&isStaff()){autoClean();if(Date.now()-USAT>600000){USAT=Date.now();loadUsage()}}
   if(r==='admin'&&p[1]==='reports'&&rscope!=='today'&&Date.now()-HDT>120000)loadHistory().then(render);
   if(r==='admin'&&isStaff()&&(p[1]==='cust'||p[1]==='rev')&&Date.now()-ADT>15000){ADT=Date.now();loadAdminData()}
@@ -1117,6 +1135,7 @@ setInterval(async()=>{
 document.addEventListener('click',e=>{unlockAudio();
   const b=e.target.closest('[data-act]');if(!b||b.tagName==='INPUT')return;
   const a=b.dataset.act,id=b.dataset.id;
+  if(!sb&&['purge','addw','delw','wlogin','wdone','setpw'].includes(a)){toast('Supabase is not configured yet');return}
   switch(a){
     case 'go':location.hash=b.dataset.to;break;
     case 'lang':lang=b.dataset.l;save('rd_lang',lang);render();break;
